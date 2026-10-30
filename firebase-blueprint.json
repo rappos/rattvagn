@@ -1,0 +1,35 @@
+{
+  "entities": {
+    "UserFavorites": {
+      "title": "UserFavorites",
+      "description": "User saved favorite stations and transit routes for Stockholm metro.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the user who owns these favorites.",
+          "maxLength": 128
+        },
+        "stationIds": {
+          "type": "array",
+          "description": "List of favorite station IDs."
+        },
+        "routes": {
+          "type": "array",
+          "description": "List of saved favorite route pairs."
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO string timestamp when favorites were last modified."
+        }
+      },
+      "required": ["userId", "stationIds", "routes"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/favorites/data": {
+      "schema": "UserFavorites",
+      "description": "Holds the user's synchronized favorite metro stations and route pairs."
+    }
+  }
+}

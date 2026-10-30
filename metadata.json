@@ -1,0 +1,6 @@
+{
+  "name": "Rätt Vagn",
+  "description": "Hitta rätt ände, vagn och uppgång i Stockholms tunnelbana. Se om du ska stå fram, i mitten eller bak för snabbast avstigning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
