@@ -154,8 +154,8 @@ npm run lint
 # Bygg produktionspaket
 npm run build
 ```
-
 ---
 
 ## Licens & Cred
 Projektet är öppen källkod under Apache-2.0. Ett stort tack till **Joakim Loxdal** och Reddit-communityn `r/stockholm` för det ursprungliga datainsamlingsarbetet.
+
