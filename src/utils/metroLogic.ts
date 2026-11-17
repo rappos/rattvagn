@@ -184,6 +184,18 @@ export function getLineAndDirection(
   };
 }
 
+const CAR_POSITION_ORDER: Record<CarPosition, number> = {
+  back: 0,
+  middle: 1,
+  front: 2,
+};
+
+function sortEvaluatedExits(items: EvaluatedExit[]): EvaluatedExit[] {
+  return [...items].sort(
+    (a, b) => CAR_POSITION_ORDER[a.carPosition] - CAR_POSITION_ORDER[b.carPosition],
+  );
+}
+
 /**
  * Huvudfunktion: Beräknar hela resan från startstation till slutstation.
  * Stödjer både direktresor och byten mellan linjer.
@@ -191,17 +203,19 @@ export function getLineAndDirection(
 export function calculateJourney(from: Station, to: Station): JourneyPlan {
   // 1. Samma station
   if (from.id === to.id) {
-    const evaluatedExits: EvaluatedExit[] = from.exits.map((exit) => ({
-      exit,
-      carPosition:
-        exit.position === 'middle' ? 'middle' : exit.position === 'up' ? 'front' : 'back',
-      carPositionLabel:
-        exit.position === 'middle'
-          ? 'I mitten'
-          : exit.position === 'up'
-            ? 'Norra änden'
-            : 'Södra änden',
-    }));
+    const evaluatedExits: EvaluatedExit[] = sortEvaluatedExits(
+      from.exits.map((exit) => ({
+        exit,
+        carPosition:
+          exit.position === 'middle' ? 'middle' : exit.position === 'up' ? 'front' : 'back',
+        carPositionLabel:
+          exit.position === 'middle'
+            ? 'I mitten'
+            : exit.position === 'up'
+              ? 'Norra änden'
+              : 'Södra änden',
+      })),
+    );
 
     const primaryLine = METRO_LINES[from.lines[0]] || METRO_LINES[17];
 
@@ -235,17 +249,19 @@ export function calculateJourney(from: Station, to: Station): JourneyPlan {
     const { line, isTravelingIncreasingLevel, directionTitle, directionLabel } =
       getLineAndDirection(from, to);
 
-    const evaluatedExits: EvaluatedExit[] = to.exits.map((exit) => {
-      const { carPosition, carPositionLabel } = evaluateExitPosition(
-        exit,
-        isTravelingIncreasingLevel,
-      );
-      return {
-        exit,
-        carPosition,
-        carPositionLabel,
-      };
-    });
+    const evaluatedExits: EvaluatedExit[] = sortEvaluatedExits(
+      to.exits.map((exit) => {
+        const { carPosition, carPositionLabel } = evaluateExitPosition(
+          exit,
+          isTravelingIncreasingLevel,
+        );
+        return {
+          exit,
+          carPosition,
+          carPositionLabel,
+        };
+      }),
+    );
 
     const frontExits = evaluatedExits.filter((e) => e.carPosition === 'front').map((e) => e.exit);
     const middleExits = evaluatedExits.filter((e) => e.carPosition === 'middle').map((e) => e.exit);
@@ -341,13 +357,15 @@ export function calculateJourney(from: Station, to: Station): JourneyPlan {
   const effectiveTransferStart = connectedTransferPlatform || transferStation;
 
   const leg2Dir = getLineAndDirection(effectiveTransferStart, to);
-  const leg2EvaluatedExits = to.exits.map((exit) => {
-    const { carPosition, carPositionLabel } = evaluateExitPosition(
-      exit,
-      leg2Dir.isTravelingIncreasingLevel,
-    );
-    return { exit, carPosition, carPositionLabel };
-  });
+  const leg2EvaluatedExits = sortEvaluatedExits(
+    to.exits.map((exit) => {
+      const { carPosition, carPositionLabel } = evaluateExitPosition(
+        exit,
+        leg2Dir.isTravelingIncreasingLevel,
+      );
+      return { exit, carPosition, carPositionLabel };
+    }),
+  );
 
   const leg2: JourneyLeg = {
     fromStation: effectiveTransferStart,
@@ -500,4 +518,78 @@ export function searchStations(query: string, maxResults = 10): Station[] {
   }
 
   return [...prefixMatches, ...nameContainsMatches, ...exitMatches].slice(0, maxResults);
+}
+
+/**
+ * Hämtar GPS-koordinater för en station (från station.coords eller uppgångens pos).
+ */
+export function getStationCoords(station: Station): { lat: number; lng: number } | null {
+  if (station.coords) {
+    return station.coords;
+  }
+  for (const exit of station.exits) {
+    if (exit.pos?.includes(',')) {
+      const [latStr, lngStr] = exit.pos.split(',');
+      const lat = Number.parseFloat(latStr.trim());
+      const lng = Number.parseFloat(lngStr.trim());
+      if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+        return { lat, lng };
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Beräknar avstånd i meter mellan två GPS-koordinater med Haversine-formeln.
+ */
+export function getDistanceMeters(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371000;
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+/**
+ * Hittar den tunnelbanestation som ligger närmast användarens position.
+ * Om flera plattformar har samma koordinater (t.ex. T-Centralen) föredras en som delar linje med preferredLines.
+ */
+export function findNearestStation(
+  lat: number,
+  lng: number,
+  preferredLines?: number[],
+): { station: Station; distanceMeters: number } | null {
+  let best: { station: Station; distanceMeters: number } | null = null;
+
+  for (const station of STATIONS) {
+    const coords = getStationCoords(station);
+    if (!coords) continue;
+
+    const dist = getDistanceMeters(lat, lng, coords.lat, coords.lng);
+    if (!best) {
+      best = { station, distanceMeters: dist };
+      continue;
+    }
+
+    // Om avståndet är nästan identiskt (< 30m, t.ex. samma station med två plattformar), välj den som delar linje
+    if (Math.abs(dist - best.distanceMeters) < 30 && preferredLines?.length) {
+      const bestMatchesLine = best.station.lines.some((l) => preferredLines.includes(l));
+      const currMatchesLine = station.lines.some((l) => preferredLines.includes(l));
+      if (currMatchesLine && !bestMatchesLine) {
+        best = { station, distanceMeters: dist };
+      }
+      continue;
+    }
+
+    if (dist < best.distanceMeters) {
+      best = { station, distanceMeters: dist };
+    }
+  }
+
+  return best;
 }

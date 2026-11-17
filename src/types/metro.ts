@@ -66,6 +66,7 @@ export interface Station {
   level: number; // Nivå/ordningstal längs linjen (högre = norrut/västerut, lägre = söderut/österut)
   platformTag?: string; // T.ex. "Blå linje" för T-Centralen/Fridhemsplan vid behov
   exits: StationExit[];
+  coords?: { lat: number; lng: number }; // GPS-koordinater för "Närmast mig"
   connections?: string[]; // Byte till pendeltåg, tvärbana, bussar etc.
   municipality?: string; // Kommun, t.ex. "Stockholm", "Solna", "Sundbyberg"
 }

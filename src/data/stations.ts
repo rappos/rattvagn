@@ -15,6 +15,7 @@
  *    - "down": Ligger mot banans södra/östra ände (där tåget stannar med främre vagnen om man åker mot söder)
  *    - "middle": Ligger i mitten av perrongen
  * 4. "hasElevator": sätt till true om hiss finns till gatuplan/biljetthall.
+ * 5. "coords": GPS-koordinater { lat, lng } för funktionen "Närmast mig".
  */
 
 import type { Station } from '../types/metro';
@@ -35,6 +36,10 @@ export const STATIONS: Station[] = [
         pos: '59.336494,17.952476',
       },
     ],
+    coords: {
+      lat: 59.336494,
+      lng: 17.952476,
+    },
   },
   {
     id: 'akalla',
@@ -58,6 +63,10 @@ export const STATIONS: Station[] = [
         pos: '59.413836,17.917671',
       },
     ],
+    coords: {
+      lat: 59.415206,
+      lng: 17.913047,
+    },
   },
   {
     id: 'alby',
@@ -81,6 +90,10 @@ export const STATIONS: Station[] = [
         pos: '59.239903,17.846196',
       },
     ],
+    coords: {
+      lat: 59.238762,
+      lng: 17.84479,
+    },
   },
   {
     id: 'alvik',
@@ -110,6 +123,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.333069,
+      lng: 17.980049,
+    },
   },
   {
     id: 'aspudden',
@@ -126,6 +143,10 @@ export const STATIONS: Station[] = [
         pos: '59.306469,18.001463',
       },
     ],
+    coords: {
+      lat: 59.306469,
+      lng: 18.001463,
+    },
   },
   {
     id: 'axelsberg',
@@ -141,6 +162,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.304333,
+      lng: 17.974722,
+    },
   },
   {
     id: 'bagarmossen',
@@ -156,6 +181,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.276111,
+      lng: 18.131389,
+    },
   },
   {
     id: 'bandhagen',
@@ -171,6 +200,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.270556,
+      lng: 18.049444,
+    },
   },
   {
     id: 'bergshamra',
@@ -194,6 +227,10 @@ export const STATIONS: Station[] = [
         pos: '59.379311,18.038006',
       },
     ],
+    coords: {
+      lat: 59.381474,
+      lng: 18.036386,
+    },
   },
   {
     id: 'björkhagen',
@@ -209,6 +246,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.290556,
+      lng: 18.115556,
+    },
   },
   {
     id: 'blackeberg',
@@ -224,6 +265,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.348333,
+      lng: 17.8825,
+    },
   },
   {
     id: 'blåsut',
@@ -239,6 +284,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.29,
+      lng: 18.090833,
+    },
   },
   {
     id: 'bredäng',
@@ -254,6 +303,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.295,
+      lng: 17.933889,
+    },
   },
   {
     id: 'brommaplan',
@@ -269,6 +322,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.338333,
+      lng: 17.939444,
+    },
   },
   {
     id: 'danderyds-sjukhus',
@@ -292,6 +349,10 @@ export const STATIONS: Station[] = [
         pos: '59.38985,18.042222',
       },
     ],
+    coords: {
+      lat: 59.392281,
+      lng: 18.040152,
+    },
   },
   {
     id: 'duvbo',
@@ -307,6 +368,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.367778,
+      lng: 17.964444,
+    },
   },
   {
     id: 'enskede-gård',
@@ -322,6 +387,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.288889,
+      lng: 18.070556,
+    },
   },
   {
     id: 'farsta',
@@ -337,6 +406,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.243333,
+      lng: 18.093889,
+    },
   },
   {
     id: 'farsta-strand',
@@ -352,6 +425,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.23505,
+      lng: 18.10207,
+    },
   },
   {
     id: 'fittja',
@@ -367,6 +444,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.2475,
+      lng: 17.860833,
+    },
   },
   {
     id: 'fridhemsplan-blå-linje',
@@ -397,6 +478,10 @@ export const STATIONS: Station[] = [
         pos: '59.334142,18.032223',
       },
     ],
+    coords: {
+      lat: 59.334919,
+      lng: 18.025206,
+    },
   },
   {
     id: 'fridhemsplan-grön-linje',
@@ -427,6 +512,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.332161,
+      lng: 18.028929,
+    },
   },
   {
     id: 'fruängen',
@@ -442,6 +531,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.285833,
+      lng: 17.965,
+    },
   },
   {
     id: 'gamla-stan',
@@ -458,6 +551,10 @@ export const STATIONS: Station[] = [
         pos: '59.323152,18.067778',
       },
     ],
+    coords: {
+      lat: 59.323152,
+      lng: 18.067778,
+    },
   },
   {
     id: 'globen',
@@ -481,6 +578,10 @@ export const STATIONS: Station[] = [
         pos: '59.29369,18.074827',
       },
     ],
+    coords: {
+      lat: 59.294479,
+      lng: 18.078282,
+    },
   },
   {
     id: 'gubbängen',
@@ -504,6 +605,10 @@ export const STATIONS: Station[] = [
         pos: '59.262179,18.082412',
       },
     ],
+    coords: {
+      lat: 59.264153,
+      lng: 18.082058,
+    },
   },
   {
     id: 'gullmarsplan',
@@ -519,6 +624,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.298333,
+      lng: 18.080833,
+    },
   },
   {
     id: 'gärdet',
@@ -542,6 +651,10 @@ export const STATIONS: Station[] = [
         pos: '59.344827,18.098581',
       },
     ],
+    coords: {
+      lat: 59.347677,
+      lng: 18.102261,
+    },
   },
   {
     id: 'hagsätra',
@@ -557,6 +670,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.262222,
+      lng: 18.012222,
+    },
   },
   {
     id: 'hallonbergen',
@@ -572,6 +689,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.375278,
+      lng: 17.969167,
+    },
   },
   {
     id: 'hallunda',
@@ -587,6 +708,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.243333,
+      lng: 17.825278,
+    },
   },
   {
     id: 'hammarbyhöjden',
@@ -610,6 +735,10 @@ export const STATIONS: Station[] = [
         pos: '59.294819,18.106713',
       },
     ],
+    coords: {
+      lat: 59.294873,
+      lng: 18.102014,
+    },
   },
   {
     id: 'hjulsta',
@@ -625,6 +754,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.396111,
+      lng: 17.887778,
+    },
   },
   {
     id: 'hornstull',
@@ -648,6 +781,10 @@ export const STATIONS: Station[] = [
         pos: '59.315762,18.034186, Bergsunds Strand',
       },
     ],
+    coords: {
+      lat: 59.316594,
+      lng: 18.038628,
+    },
   },
   {
     id: 'husby',
@@ -671,6 +808,10 @@ export const STATIONS: Station[] = [
         pos: '59.408152,17.928786',
       },
     ],
+    coords: {
+      lat: 59.410019,
+      lng: 17.925879,
+    },
   },
   {
     id: 'huvudsta',
@@ -686,6 +827,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.349444,
+      lng: 17.985556,
+    },
   },
   {
     id: 'hägerstensåsen',
@@ -709,6 +854,10 @@ export const STATIONS: Station[] = [
         pos: '59.294441,17.976401',
       },
     ],
+    coords: {
+      lat: 59.295575,
+      lng: 17.979609,
+    },
   },
   {
     id: 'hässelby-gård',
@@ -730,6 +879,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.366944,
+      lng: 17.844444,
+    },
   },
   {
     id: 'hässelby-strand',
@@ -745,6 +898,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.361389,
+      lng: 17.8325,
+    },
   },
   {
     id: 'högdalen',
@@ -760,6 +917,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.263889,
+      lng: 18.043056,
+    },
   },
   {
     id: 'hökarängen',
@@ -781,6 +942,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.257778,
+      lng: 18.0825,
+    },
   },
   {
     id: 'hötorget',
@@ -832,6 +997,10 @@ export const STATIONS: Station[] = [
         pos: '59.335537,18.063422',
       },
     ],
+    coords: {
+      lat: 59.336374,
+      lng: 18.062435,
+    },
   },
   {
     id: 'islandstorget',
@@ -847,6 +1016,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.346111,
+      lng: 17.892917,
+    },
   },
   {
     id: 'johannelund',
@@ -862,6 +1035,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.367778,
+      lng: 17.857778,
+    },
   },
   {
     id: 'karlaplan',
@@ -885,6 +1062,10 @@ export const STATIONS: Station[] = [
         pos: '59.338311,18.090545',
       },
     ],
+    coords: {
+      lat: 59.340428,
+      lng: 18.09298,
+    },
   },
   {
     id: 'kista',
@@ -908,6 +1089,10 @@ export const STATIONS: Station[] = [
         pos: '59.401954,17.94415',
       },
     ],
+    coords: {
+      lat: 59.40374,
+      lng: 17.942133,
+    },
   },
   {
     id: 'kristineberg',
@@ -923,6 +1108,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.3325,
+      lng: 18.004167,
+    },
   },
   {
     id: 'kungsträdgården',
@@ -946,6 +1135,10 @@ export const STATIONS: Station[] = [
         pos: '59.330743,18.073765',
       },
     ],
+    coords: {
+      lat: 59.32989,
+      lng: 18.068712,
+    },
   },
   {
     id: 'kärrtorp',
@@ -961,6 +1154,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.284444,
+      lng: 18.114167,
+    },
   },
   {
     id: 'liljeholmen',
@@ -984,6 +1181,10 @@ export const STATIONS: Station[] = [
         pos: '59.31079,18.024487',
       },
     ],
+    coords: {
+      lat: 59.310045,
+      lng: 18.022202,
+    },
   },
   {
     id: 'mariatorget',
@@ -1007,6 +1208,10 @@ export const STATIONS: Station[] = [
         pos: '59.317251,18.057801',
       },
     ],
+    coords: {
+      lat: 59.3169,
+      lng: 18.063358,
+    },
   },
   {
     id: 'masmo',
@@ -1022,6 +1227,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.249722,
+      lng: 17.880278,
+    },
   },
   {
     id: 'medborgarplatsen',
@@ -1045,6 +1254,10 @@ export const STATIONS: Station[] = [
         pos: '59.315345,18.073025',
       },
     ],
+    coords: {
+      lat: 59.314234,
+      lng: 18.073325,
+    },
   },
   {
     id: 'midsommarkransen',
@@ -1060,6 +1273,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.3017,
+      lng: 18.0111,
+    },
   },
   {
     id: 'mälarhöjden',
@@ -1075,6 +1292,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.300833,
+      lng: 17.957222,
+    },
   },
   {
     id: 'mörby-centrum',
@@ -1090,6 +1311,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.398611,
+      lng: 18.036111,
+    },
   },
   {
     id: 'norsborg',
@@ -1105,6 +1330,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.243889,
+      lng: 17.813056,
+    },
   },
   {
     id: 'näckrosen',
@@ -1128,6 +1357,10 @@ export const STATIONS: Station[] = [
         pos: '59.366275,17.982978',
       },
     ],
+    coords: {
+      lat: 59.368445,
+      lng: 17.979641,
+    },
   },
   {
     id: 'odenplan',
@@ -1157,6 +1390,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.342896,
+      lng: 18.046095,
+    },
   },
   {
     id: 'rinkeby',
@@ -1179,6 +1416,10 @@ export const STATIONS: Station[] = [
         pos: '59.388364,17.928003',
       },
     ],
+    coords: {
+      lat: 59.388364,
+      lng: 17.928003,
+    },
   },
   {
     id: 'rissne',
@@ -1194,6 +1435,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.375833,
+      lng: 17.939722,
+    },
   },
   {
     id: 'ropsten',
@@ -1224,6 +1469,10 @@ export const STATIONS: Station[] = [
         pos: '59.355492,18.09975',
       },
     ],
+    coords: {
+      lat: 59.357401,
+      lng: 18.102711,
+    },
   },
   {
     id: 'råcksta',
@@ -1239,6 +1488,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.354722,
+      lng: 17.881861,
+    },
   },
   {
     id: 'rådhuset',
@@ -1262,6 +1515,10 @@ export const STATIONS: Station[] = [
         pos: '59.331318,18.046203',
       },
     ],
+    coords: {
+      lat: 59.33013,
+      lng: 18.041857,
+    },
   },
   {
     id: 'rådmansgatan',
@@ -1285,6 +1542,10 @@ export const STATIONS: Station[] = [
         pos: '59.340434,18.058841',
       },
     ],
+    coords: {
+      lat: 59.342239,
+      lng: 18.057178,
+    },
   },
   {
     id: 'rågsved',
@@ -1300,6 +1561,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.256667,
+      lng: 18.028333,
+    },
   },
   {
     id: 's-t-eriksplan',
@@ -1323,6 +1588,10 @@ export const STATIONS: Station[] = [
         pos: '59.341446,18.037684',
       },
     ],
+    coords: {
+      lat: 59.339755,
+      lng: 18.03674,
+    },
   },
   {
     id: 'sandsborg',
@@ -1338,6 +1607,10 @@ export const STATIONS: Station[] = [
         hasElevator: false,
       },
     ],
+    coords: {
+      lat: 59.285,
+      lng: 18.092222,
+    },
   },
   {
     id: 'skanstull',
@@ -1361,6 +1634,10 @@ export const STATIONS: Station[] = [
         pos: '59.307767,18.076479',
       },
     ],
+    coords: {
+      lat: 59.309914,
+      lng: 18.075492,
+    },
   },
   {
     id: 'skarpnäck',
@@ -1376,6 +1653,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.266806,
+      lng: 18.133333,
+    },
   },
   {
     id: 'skogskyrkogården',
@@ -1391,6 +1672,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.278056,
+      lng: 18.095278,
+    },
   },
   {
     id: 'skärholmen',
@@ -1412,6 +1697,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.277139,
+      lng: 17.906944,
+    },
   },
   {
     id: 'skärmarbrink',
@@ -1427,6 +1716,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.295639,
+      lng: 18.089806,
+    },
   },
   {
     id: 'slussen',
@@ -1457,6 +1750,10 @@ export const STATIONS: Station[] = [
         pos: '59.319681,18.072199',
       },
     ],
+    coords: {
+      lat: 59.320147,
+      lng: 18.072166,
+    },
   },
   {
     id: 'sockenplan',
@@ -1472,6 +1769,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.282778,
+      lng: 18.070278,
+    },
   },
   {
     id: 'solna-centrum',
@@ -1502,6 +1803,10 @@ export const STATIONS: Station[] = [
         pos: '59.358472,17.998803',
       },
     ],
+    coords: {
+      lat: 59.361305,
+      lng: 17.996485,
+    },
   },
   {
     id: 'solna-strand',
@@ -1517,6 +1822,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.354167,
+      lng: 17.973889,
+    },
   },
   {
     id: 'stadion',
@@ -1540,6 +1849,10 @@ export const STATIONS: Station[] = [
         pos: '59.339673,18.081168',
       },
     ],
+    coords: {
+      lat: 59.343454,
+      lng: 18.080857,
+    },
   },
   {
     id: 'stadshagen',
@@ -1563,6 +1876,10 @@ export const STATIONS: Station[] = [
         pos: '59.336905,18.016527',
       },
     ],
+    coords: {
+      lat: 59.336735,
+      lng: 18.017793,
+    },
   },
   {
     id: 'stora-mossen',
@@ -1578,6 +1895,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.334722,
+      lng: 17.965,
+    },
   },
   {
     id: 'stureby',
@@ -1593,6 +1914,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.274722,
+      lng: 18.056944,
+    },
   },
   {
     id: 'sundbybergs-centrum',
@@ -1616,6 +1941,10 @@ export const STATIONS: Station[] = [
         pos: '59.360796,17.97138',
       },
     ],
+    coords: {
+      lat: 59.363098,
+      lng: 17.970285,
+    },
   },
   {
     id: 'svedmyra',
@@ -1631,6 +1960,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.2775,
+      lng: 18.067083,
+    },
   },
   {
     id: 'sätra',
@@ -1646,6 +1979,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.28577,
+      lng: 17.92167,
+    },
   },
   {
     id: 't-centralen-blå-linje',
@@ -1676,6 +2013,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.330344,
+      lng: 18.059056,
+    },
   },
   {
     id: 't-centralen-grön-röd-linje',
@@ -1706,6 +2047,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.332139,
+      lng: 18.063154,
+    },
   },
   {
     id: 'tallkrogen',
@@ -1721,6 +2066,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.271667,
+      lng: 18.086389,
+    },
   },
   {
     id: 'tekniska-högskolan',
@@ -1758,6 +2107,10 @@ export const STATIONS: Station[] = [
         pos: '59.345062,18.071351',
       },
     ],
+    coords: {
+      lat: 59.346588,
+      lng: 18.065718,
+    },
   },
   {
     id: 'telefonplan',
@@ -1773,6 +2126,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.298056,
+      lng: 17.996944,
+    },
   },
   {
     id: 'tensta',
@@ -1796,6 +2153,10 @@ export const STATIONS: Station[] = [
         pos: '59.393882,17.904335',
       },
     ],
+    coords: {
+      lat: 59.394805,
+      lng: 17.899121,
+    },
   },
   {
     id: 'thorildsplan',
@@ -1811,6 +2172,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.331389,
+      lng: 18.014722,
+    },
   },
   {
     id: 'universitetet',
@@ -1826,6 +2191,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.365694,
+      lng: 18.054722,
+    },
   },
   {
     id: 'vårberg',
@@ -1841,6 +2210,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.275833,
+      lng: 17.890833,
+    },
   },
   {
     id: 'vårby-gård',
@@ -1856,6 +2229,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.264722,
+      lng: 17.883889,
+    },
   },
   {
     id: 'vällingby',
@@ -1879,6 +2256,10 @@ export const STATIONS: Station[] = [
         pos: '59.363043,17.872524',
       },
     ],
+    coords: {
+      lat: 59.364487,
+      lng: 17.86967,
+    },
   },
   {
     id: 'västertorp',
@@ -1902,6 +2283,10 @@ export const STATIONS: Station[] = [
         pos: '59.290414,17.965114',
       },
     ],
+    coords: {
+      lat: 59.292101,
+      lng: 17.968483,
+    },
   },
   {
     id: 'västra-skogen',
@@ -1924,6 +2309,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.347617,
+      lng: 18.003652,
+    },
   },
   {
     id: 'zinkensdamm',
@@ -1939,6 +2328,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.317778,
+      lng: 18.05,
+    },
   },
   {
     id: 'åkeshov',
@@ -1954,6 +2347,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.34194,
+      lng: 17.92389,
+    },
   },
   {
     id: 'ängbyplan',
@@ -1969,6 +2366,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.341889,
+      lng: 17.907389,
+    },
   },
   {
     id: 'örnsberg',
@@ -1984,6 +2385,10 @@ export const STATIONS: Station[] = [
         hasElevator: true,
       },
     ],
+    coords: {
+      lat: 59.3055,
+      lng: 17.989028,
+    },
   },
   {
     id: 'östermalmstorg',
@@ -2014,6 +2419,10 @@ export const STATIONS: Station[] = [
         pos: '59.336254,18.079033',
       },
     ],
+    coords: {
+      lat: 59.336254,
+      lng: 18.079033,
+    },
   },
 ];
 

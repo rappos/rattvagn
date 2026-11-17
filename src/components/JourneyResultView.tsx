@@ -25,16 +25,8 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
   const [selectedExitId, setSelectedExitId] = useState<string | null>(null);
   const [showAllExits, setShowAllExits] = useState(true);
 
-  const {
-    from,
-    to,
-    isSameStation,
-    isDirect,
-    legs,
-    frontExits,
-    middleExits,
-    backExits,
-  } = journeyPlan;
+  const { from, to, isSameStation, isDirect, legs, frontExits, middleExits, backExits } =
+    journeyPlan;
 
   const activeLeg = legs[legs.length - 1]; // destination leg
   const evaluatedExits = activeLeg ? activeLeg.evaluatedExits : [];
@@ -54,38 +46,17 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
         <p className="text-xs text-[#78736B] mb-4">Här är alla uppgångar på stationen:</p>
 
         <div className="grid grid-cols-1 gap-2 text-left">
-          {from.exits.map((exit) => (
+          {evaluatedExits.map(({ exit, carPosition, carPositionLabel }) => (
             <ExitCard
               key={exit.id}
               exit={exit}
-              carPosition={
-                exit.position === 'up' ? 'front' : exit.position === 'down' ? 'back' : 'middle'
-              }
-              carPositionLabel={
-                exit.position === 'up'
-                  ? 'Norra / västra änden'
-                  : exit.position === 'down'
-                    ? 'Södra / östra änden'
-                    : 'Mitten'
-              }
+              carPosition={carPosition}
+              carPositionLabel={carPositionLabel}
             />
           ))}
         </div>
       </div>
     );
-  }
-
-  // Find the primary car recommendation for the destination
-  const _primaryExit = to.exits[0];
-  let _primaryCarLabel = 'FRAM, I MITTEN ELLER BAK';
-  if (frontExits.length > 0 && backExits.length === 0) {
-    _primaryCarLabel = 'STÅ FRAM';
-  } else if (backExits.length > 0 && frontExits.length === 0) {
-    _primaryCarLabel = 'STÅ BAK';
-  } else if (middleExits.length > 0 && frontExits.length === 0 && backExits.length === 0) {
-    _primaryCarLabel = 'STÅ I MITTEN';
-  } else {
-    _primaryCarLabel = 'SE UPPGÅNG NEDAN';
   }
 
   return (
@@ -198,7 +169,7 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
           </button>
         </div>
 
-        {/* Filter Pills for Car Position */}
+        {/* Filter Pills for Car Position (Bak, Mitten, Fram) */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
           <button
             type="button"
@@ -213,15 +184,15 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
           </button>
           <button
             type="button"
-            onClick={() => setSelectedCar('front')}
+            onClick={() => setSelectedCar('back')}
             className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 ${
-              selectedCar === 'front'
-                ? 'bg-[#138A36] text-white'
-                : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#EAF5EE]'
+              selectedCar === 'back'
+                ? 'bg-[#D32F2F] text-white'
+                : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#FDF0F0]'
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#138A36]" />
-            Fram ({frontExits.length})
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D32F2F]" />
+            Bak ({backExits.length})
           </button>
           <button
             type="button"
@@ -237,15 +208,15 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
           </button>
           <button
             type="button"
-            onClick={() => setSelectedCar('back')}
+            onClick={() => setSelectedCar('front')}
             className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 ${
-              selectedCar === 'back'
-                ? 'bg-[#D32F2F] text-white'
-                : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#FDF0F0]'
+              selectedCar === 'front'
+                ? 'bg-[#138A36] text-white'
+                : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#EAF5EE]'
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D32F2F]" />
-            Bak ({backExits.length})
+            <span className="w-1.5 h-1.5 rounded-full bg-[#138A36]" />
+            Fram ({frontExits.length})
           </button>
         </div>
 

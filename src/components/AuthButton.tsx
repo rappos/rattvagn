@@ -3,25 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
 import {
-  User as UserIcon,
-  LogOut,
-  Cloud,
   AlertTriangle,
-  ExternalLink,
-  X,
-  Copy,
   Check,
+  Cloud,
+  Copy,
+  ExternalLink,
+  LogOut,
+  User as UserIcon,
+  X,
 } from 'lucide-react';
-import {
-  auth,
-  googleProvider,
-  signInWithPopup,
-  firebaseSignOut,
-  type User,
-} from '../lib/firebase';
+import type React from 'react';
+import { useState } from 'react';
 import firebaseConfig from '../../firebase-applet-config.json';
+import { auth, firebaseSignOut, googleProvider, signInWithPopup, type User } from '../lib/firebase';
 
 interface AuthButtonProps {
   user: User | null;
@@ -175,9 +170,7 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ user, loading }) => {
                 <div className="w-7 h-7 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center">
                   <AlertTriangle className="w-4 h-4" />
                 </div>
-                <h3 className="text-sm font-bold text-[#1F1D1A]">
-                  Auktorisera domänen i Firebase
-                </h3>
+                <h3 className="text-sm font-bold text-[#1F1D1A]">Auktorisera domänen i Firebase</h3>
               </div>
               <button
                 type="button"
@@ -191,7 +184,9 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ user, loading }) => {
             <div className="text-xs text-[#524E48] leading-relaxed space-y-2.5">
               <p>
                 Google tillåter endast inloggningar från domäner som uttryckligen har lagts till i
-                ditt Firebase-projekt. Eftersom du nyligen kopplat din egen domän (<strong>{currentHostname}</strong>) behöver den godkännas i Firebase Console en gång.
+                ditt Firebase-projekt. Eftersom du nyligen kopplat din egen domän (
+                <strong>{currentHostname}</strong>) behöver den godkännas i Firebase Console en
+                gång.
               </p>
 
               <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E7E2D9] space-y-2">
@@ -202,7 +197,11 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ user, loading }) => {
                     onClick={handleCopyDomain}
                     className="inline-flex items-center gap-1 text-[10px] font-bold text-[#006298] hover:underline"
                   >
-                    {copiedDomain ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                    {copiedDomain ? (
+                      <Check className="w-3 h-3 text-emerald-600" />
+                    ) : (
+                      <Copy className="w-3 h-3" />
+                    )}
                     <span>{copiedDomain ? 'Kopierad!' : 'Kopiera'}</span>
                   </button>
                 </div>
@@ -215,8 +214,15 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ user, loading }) => {
                 <div className="font-semibold text-[#1F1D1A]">Gör så här (tar 30 sekunder):</div>
                 <ol className="list-decimal pl-4 space-y-1 text-[#524E48]">
                   <li>Öppna inställningarna i Firebase Console via knappen nedan.</li>
-                  <li>Scrolla ner till sektionen <strong>"Authorized domains"</strong> (Auktoriserade domäner).</li>
-                  <li>Klicka på <strong>"Add domain"</strong> och klistra in <code>{currentHostname}</code> (samt <code>vercel.app</code> om du använder förhandsvisningar).</li>
+                  <li>
+                    Scrolla ner till sektionen <strong>"Authorized domains"</strong> (Auktoriserade
+                    domäner).
+                  </li>
+                  <li>
+                    Klicka på <strong>"Add domain"</strong> och klistra in{' '}
+                    <code>{currentHostname}</code> (samt <code>vercel.app</code> om du använder
+                    förhandsvisningar).
+                  </li>
                 </ol>
               </div>
             </div>

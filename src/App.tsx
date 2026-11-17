@@ -140,6 +140,7 @@ export default function App() {
                   placeholder="Avgångsstation (t.ex. Odenplan)..."
                   selectedStation={fromStation}
                   onSelectStation={setFromStation}
+                  otherStation={toStation}
                   iconColor="text-[#138A36]"
                   favoriteStationIds={favoriteStationIds}
                 />
@@ -149,6 +150,7 @@ export default function App() {
                   placeholder="Destination (t.ex. T-Centralen)..."
                   selectedStation={toStation}
                   onSelectStation={setToStation}
+                  otherStation={fromStation}
                   iconColor="text-[#D32F2F]"
                   favoriteStationIds={favoriteStationIds}
                 />
