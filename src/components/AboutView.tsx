@@ -157,6 +157,62 @@ export const AboutView: React.FC = () => {
           </section>
         </div>
       </div>
+
+      {/* Terms of Service & Privacy Policy */}
+      <section className="bg-[var(--bg-surface)] border border-[var(--grid-divider)] grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-[var(--grid-divider)]">
+        {/* Användarvillkor */}
+        <div className="p-5 space-y-2.5">
+          <h3 className="font-display text-base sm:text-lg font-bold text-[var(--ink-primary)] leading-tight">
+            Användarvillkor
+          </h3>
+          <div className="space-y-2 text-xs text-[var(--ink-secondary)] leading-relaxed">
+            <p>
+              <strong className="text-[var(--ink-primary)]">Rätt Vagn</strong> är ett kostnadsfritt,
+              oberoende hjälpmedel och har ingen koppling till SL eller Region Stockholm.
+            </p>
+            <p>
+              Information om uppgångar, byten och vagnsplacering tillhandahålls i befintligt skick
+              utan garanti. Avstängningar, ombyggnationer eller ändrad trafik kan påverka hur en
+              station fungerar i praktiken — följ alltid skyltning på plats.
+            </p>
+            <p>
+              Tjänsten får användas fritt för personligt bruk och kan när som helst uppdateras eller
+              förändras.
+            </p>
+          </div>
+        </div>
+
+        {/* Integritetspolicy */}
+        <div className="p-5 space-y-2.5">
+          <h3 className="font-display text-base sm:text-lg font-bold text-[var(--ink-primary)] leading-tight">
+            Integritetspolicy
+          </h3>
+          <div className="space-y-2 text-xs text-[var(--ink-secondary)] leading-relaxed">
+            <p>
+              Utan inloggning sparas dina favoriter och temaval endast lokalt i din webbläsare
+              (localStorage). Vi använder varken spårningscookies eller annonsering.
+            </p>
+            <p>
+              Om du väljer att logga in med Google används Google Firebase för inloggning och för
+              att synkronisera dina favoritstationer och favoritsträckor mellan enheter. Endast
+              ditt användar-ID samt dina sparade favoriter lagras i databasen.
+            </p>
+            <p>
+              Inga uppgifter säljs eller delas med tredje part. Du kan när som helst radera ditt
+              konto och all sparad molndata via{' '}
+              <strong className="text-[var(--ink-primary)]">Ta bort konto</strong> i kontomenyn,
+              eller genom att mejla{' '}
+              <a
+                href="mailto:emilemail4@gmail.com"
+                className="text-[#008DD0] hover:underline font-medium"
+              >
+                emilemail4@gmail.com
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
