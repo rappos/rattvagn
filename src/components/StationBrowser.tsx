@@ -3,21 +3,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  ArrowUpDown,
-  ChevronDown,
-  ChevronUp,
-  MapPin,
-  Search,
-  SlidersHorizontal,
-  Star,
-  X,
-} from 'lucide-react';
 import type React from 'react';
 import { useMemo, useState } from 'react';
-import { getColorClasses, METRO_LINES } from '../data/lines';
+import { getColorClasses, getStationPrimaryColor, METRO_LINES } from '../data/lines';
 import { STATIONS } from '../data/stations';
 import type { MetroColor, Station } from '../types/metro';
+import {
+  MetroBookmarkIcon,
+  MetroChevronDown,
+  MetroChevronUp,
+  MetroCloseIcon,
+  MetroElevatorIcon,
+  MetroFilterIcon,
+  MetroSearchIcon,
+  MetroStairsIcon,
+  MetroSwapIcon,
+} from './MetroIcons';
 
 interface StationBrowserProps {
   favoriteStationIds: string[];
@@ -66,7 +67,6 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
 
   const handleSelectColor = (nextColor: ColorFilter) => {
     setColorFilter(nextColor);
-    // Clear selected line if it doesn't belong to the newly chosen color
     if (selectedLine !== null) {
       if (nextColor === 'green' || nextColor === 'red' || nextColor === 'blue') {
         if (!COLOR_TO_LINES[nextColor].includes(selectedLine)) {
@@ -92,7 +92,6 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
 
   const filteredAndSortedStations = useMemo(() => {
     const filtered = STATIONS.filter((station) => {
-      // 1. Color / Favorites filter
       if (colorFilter === 'fav') {
         if (!favoriteStationIds.includes(station.id)) return false;
       } else if (colorFilter !== 'all') {
@@ -100,12 +99,10 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
         if (!station.lines.some((l) => linesForColor.includes(l))) return false;
       }
 
-      // 2. Specific line number filter
       if (selectedLine !== null) {
         if (!station.lines.includes(selectedLine)) return false;
       }
 
-      // 3. Text search
       if (searchQuery.trim().length > 0) {
         const q = searchQuery.toLowerCase().trim();
         const matchesName = station.name.toLowerCase().includes(q);
@@ -117,7 +114,6 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
       return true;
     });
 
-    // 4. Sorting
     return [...filtered].sort((a, b) => {
       switch (sortBy) {
         case 'name-asc':
@@ -125,7 +121,6 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
         case 'name-desc':
           return b.name.localeCompare(a.name, 'sv');
         case 'line-order':
-          // Higher level = further North/West
           if (b.level !== a.level) return b.level - a.level;
           return a.name.localeCompare(b.name, 'sv');
         case 'most-exits':
@@ -148,28 +143,27 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
   };
 
   return (
-    <div className="space-y-4 max-w-xl mx-auto">
-      {/* Search, Filter & Sort Card */}
-      <div className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-4 space-y-3 shadow-2xs">
-        {/* Search input + Filter toggle */}
-        <div className="flex items-center gap-2">
+    <div className="space-y-3">
+      {/* Station Directory Control Bar */}
+      <div className="bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-t-[5px] border-t-[#008DD0]">
+        <div className="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center gap-2 border-b border-[var(--grid-divider)]">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-[#8E8980] absolute left-3 top-1/2 -translate-y-1/2" />
+            <MetroSearchIcon className="w-4 h-4 text-[var(--ink-secondary)] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Sök station, gata eller linje..."
-              className="w-full bg-[#FAF8F5] border border-[#D9D3C7] text-[#1F1D1A] rounded-xl pl-9 pr-8 py-2 text-sm font-medium placeholder-[#A8A399] focus:outline-hidden focus:border-[#006298] transition-all"
+              placeholder="Sök station, gata eller linjenummer..."
+              className="w-full h-11 bg-[var(--bg-canvas)] border border-[var(--grid-divider)] text-[var(--ink-primary)] pl-9 pr-9 text-sm font-semibold placeholder-[var(--ink-secondary)]/70 focus:outline-none focus:border-2 focus:border-[#008DD0]"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
                 aria-label="Rensa sökning"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E8980] hover:text-[#1F1D1A]"
+                className="metro-btn absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center text-[var(--ink-secondary)] hover:text-[#E53935]"
               >
-                <X className="w-3.5 h-3.5" />
+                <MetroCloseIcon className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -177,96 +171,109 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
           <button
             type="button"
             onClick={() => setShowFilters((v) => !v)}
-            className={`h-[38px] px-2.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors shrink-0 ${
+            className={`metro-btn h-11 px-4 border text-xs font-bold uppercase tracking-[0.08em] flex items-center justify-center gap-2 shrink-0 ${
               showFilters
-                ? 'bg-[#EAE5DC] border-[#D9D3C7] text-[#1F1D1A]'
-                : 'bg-[#FAF8F5] border-[#E7E2D9] text-[#6B665F] hover:text-[#1F1D1A]'
+                ? 'bg-[#16181D] text-[#FFFFFF] border-[#16181D] dark:bg-[#FFD400] dark:text-[#16181D] dark:border-[#FFD400]'
+                : 'bg-[var(--bg-canvas)] text-[var(--ink-primary)] border-[var(--grid-divider)] hover:bg-[#008DD0] hover:text-[#FFFFFF] hover:border-[#008DD0]'
             }`}
             title="Visa eller dölj filter och sortering"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span className="hidden xs:inline">Filter</span>
+            <MetroFilterIcon className="w-3.5 h-3.5" />
+            <span>Filter</span>
           </button>
         </div>
 
         {showFilters && (
-          <div className="space-y-2.5 pt-1">
-            {/* Color & Favorites Filter Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-xs">
+          <div className="divide-y divide-[var(--grid-divider)]">
+            {/* Transit Line Color & Favorites Filter Strip */}
+            <div className="p-3 sm:px-4 flex items-center gap-1.5 overflow-x-auto text-xs">
               <button
                 type="button"
                 onClick={() => {
                   handleSelectColor('all');
                   setSelectedLine(null);
                 }}
-                className={`px-3 py-1 rounded-lg font-medium transition-colors shrink-0 ${
+                className={`metro-btn h-9 px-3 border font-bold uppercase tracking-[0.06em] shrink-0 ${
                   colorFilter === 'all' && selectedLine === null
-                    ? 'bg-[#1F1D1A] text-white'
-                    : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#EAE5DC]'
+                    ? 'bg-[#008DD0] text-[#FFFFFF] border-[#008DD0]'
+                    : 'bg-[var(--bg-canvas)] text-[var(--ink-primary)] border-[var(--grid-divider)] hover:bg-[#16181D] hover:text-[#FFFFFF]'
                 }`}
               >
-                Alla ({STATIONS.length})
+                Alla <span className="font-mono-tabular">({STATIONS.length})</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectColor('fav')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 shrink-0 ${
+                className={`metro-btn h-9 px-3 border font-bold uppercase tracking-[0.06em] flex items-center gap-1.5 shrink-0 ${
                   colorFilter === 'fav'
-                    ? 'bg-amber-600 text-white'
-                    : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-amber-50 hover:text-amber-700'
+                    ? 'bg-[#FFD400] text-[#16181D] border-[#FFD400]'
+                    : 'bg-[var(--bg-canvas)] text-[var(--ink-primary)] border-[var(--grid-divider)] hover:bg-[#FFD400] hover:text-[#16181D] hover:border-[#FFD400]'
                 }`}
               >
-                <Star className="w-3 h-3 fill-current" />
-                <span>Favoriter ({favoriteStationIds.length})</span>
+                <MetroBookmarkIcon filled={colorFilter === 'fav'} className="w-3.5 h-3.5" />
+                <span>
+                  Favoriter <span className="font-mono-tabular">({favoriteStationIds.length})</span>
+                </span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectColor(colorFilter === 'green' ? 'all' : 'green')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 shrink-0 ${
+                className={`metro-btn h-9 px-3 border font-bold uppercase tracking-[0.06em] flex items-center gap-1.5 shrink-0 ${
                   colorFilter === 'green'
-                    ? 'bg-[#138A36] text-white'
-                    : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#EAF5EE] hover:text-[#138A36]'
+                    ? 'bg-[#00A859] text-[#FFFFFF] border-[#00A859]'
+                    : 'bg-[var(--bg-canvas)] text-[var(--ink-primary)] border-[var(--grid-divider)] hover:bg-[#00A859] hover:text-[#FFFFFF] hover:border-[#00A859]'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#138A36]" />
-                Grön
+                <span
+                  className={`w-2.5 h-2.5 shrink-0 ${
+                    colorFilter === 'green' ? 'bg-[#FFFFFF]' : 'bg-[#00A859]'
+                  }`}
+                />
+                <span>Grön</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectColor(colorFilter === 'red' ? 'all' : 'red')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 shrink-0 ${
+                className={`metro-btn h-9 px-3 border font-bold uppercase tracking-[0.06em] flex items-center gap-1.5 shrink-0 ${
                   colorFilter === 'red'
-                    ? 'bg-[#D32F2F] text-white'
-                    : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#FDF0F0] hover:text-[#D32F2F]'
+                    ? 'bg-[#E53935] text-[#FFFFFF] border-[#E53935]'
+                    : 'bg-[var(--bg-canvas)] text-[var(--ink-primary)] border-[var(--grid-divider)] hover:bg-[#E53935] hover:text-[#FFFFFF] hover:border-[#E53935]'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D32F2F]" />
-                Röd
+                <span
+                  className={`w-2.5 h-2.5 shrink-0 ${
+                    colorFilter === 'red' ? 'bg-[#FFFFFF]' : 'bg-[#E53935]'
+                  }`}
+                />
+                <span>Röd</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectColor(colorFilter === 'blue' ? 'all' : 'blue')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 shrink-0 ${
+                className={`metro-btn h-9 px-3 border font-bold uppercase tracking-[0.06em] flex items-center gap-1.5 shrink-0 ${
                   colorFilter === 'blue'
-                    ? 'bg-[#006298] text-white'
-                    : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#EAF3F9] hover:text-[#006298]'
+                    ? 'bg-[#008DD0] text-[#FFFFFF] border-[#008DD0]'
+                    : 'bg-[var(--bg-canvas)] text-[var(--ink-primary)] border-[var(--grid-divider)] hover:bg-[#008DD0] hover:text-[#FFFFFF] hover:border-[#008DD0]'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#006298]" />
-                Blå
+                <span
+                  className={`w-2.5 h-2.5 shrink-0 ${
+                    colorFilter === 'blue' ? 'bg-[#FFFFFF]' : 'bg-[#008DD0]'
+                  }`}
+                />
+                <span>Blå</span>
               </button>
             </div>
 
-            {/* Line Number Filter + Sort Row */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#F0ECE1]">
-              {/* Specific Line Number Chips */}
-              <div className="flex items-center gap-1 overflow-x-auto">
-                <span className="text-[11px] font-semibold text-[#78736B] mr-0.5 shrink-0">
-                  Linje:
+            {/* Specific Line Numbers + Sort Select */}
+            <div className="p-3 sm:px-4 flex flex-wrap items-center justify-between gap-2.5 bg-[var(--bg-canvas)]">
+              <div className="flex items-center gap-1.5 overflow-x-auto">
+                <span className="signage-label text-[var(--ink-secondary)] mr-1 shrink-0">
+                  Linje
                 </span>
                 {visibleLineNumbers.map((lineId) => {
                   const line = METRO_LINES[lineId];
@@ -279,10 +286,10 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
                       type="button"
                       onClick={() => handleSelectLine(lineId)}
                       title={line.description}
-                      className={`text-[11px] font-bold px-2 py-0.5 rounded-md border transition-all shrink-0 ${
+                      className={`metro-btn font-mono-tabular text-xs font-bold w-8 h-8 border flex items-center justify-center shrink-0 ${
                         isActive
-                          ? `${c.bg} text-white border-transparent shadow-2xs`
-                          : 'bg-[#FAF8F5] text-[#45423D] border-[#E7E2D9] hover:border-[#1F1D1A]'
+                          ? `${c.bg} ${c.fgOnBg} ${c.border}`
+                          : 'bg-[var(--bg-surface)] text-[var(--ink-primary)] border-[var(--grid-divider)] hover:border-[#008DD0]'
                       }`}
                     >
                       {lineId}
@@ -291,14 +298,13 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
                 })}
               </div>
 
-              {/* Sort Dropdown */}
-              <div className="flex items-center gap-1.5 ml-auto">
-                <ArrowUpDown className="w-3.5 h-3.5 text-[#78736B] shrink-0" />
+              <div className="flex items-center gap-2 ml-auto">
+                <MetroSwapIcon className="w-3.5 h-3.5 text-[var(--ink-secondary)] shrink-0" />
                 <select
                   aria-label="Sortera stationer"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="bg-[#FAF8F5] border border-[#E7E2D9] text-[#1F1D1A] text-xs font-medium rounded-lg px-2 py-1 focus:outline-hidden focus:border-[#006298]"
+                  className="h-9 bg-[var(--bg-surface)] border border-[var(--grid-divider)] text-[var(--ink-primary)] text-xs font-bold px-2.5 focus:outline-none focus:border-2 focus:border-[#008DD0]"
                 >
                   <option value="name-asc">Namn (A–Ö)</option>
                   <option value="name-desc">Namn (Ö–A)</option>
@@ -312,13 +318,24 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
         )}
       </div>
 
-      {/* Results Summary */}
-      <div className="flex items-center justify-between px-1 text-[11px] text-[#78736B]">
-        <span>
-          Visar <strong className="text-[#1F1D1A]">{filteredAndSortedStations.length}</strong>{' '}
+      {/* Results Summary Strip */}
+      <div className="flex items-center justify-between px-1 py-1 text-xs">
+        <span className="text-[var(--ink-secondary)] font-medium">
+          Visar{' '}
+          <strong className="font-mono-tabular text-[var(--ink-primary)]">
+            {filteredAndSortedStations.length}
+          </strong>{' '}
           {filteredAndSortedStations.length === 1 ? 'station' : 'stationer'}
-          {selectedLine !== null ? ` på linje ${selectedLine}` : ''}
+          {selectedLine !== null ? (
+            <>
+              {' '}
+              på <strong className="font-mono-tabular text-[var(--ink-primary)]">linje {selectedLine}</strong>
+            </>
+          ) : (
+            ''
+          )}
         </span>
+
         {(colorFilter !== 'all' || selectedLine !== null || searchQuery.trim().length > 0) && (
           <button
             type="button"
@@ -327,19 +344,20 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
               setSelectedLine(null);
               setSearchQuery('');
             }}
-            className="text-[#006298] font-semibold hover:underline"
+            className="metro-btn px-2.5 py-1 bg-[#16181D] text-[#FFFFFF] hover:bg-[#FFD400] hover:text-[#16181D] text-[11px] font-bold uppercase tracking-[0.06em]"
           >
             Nollställ filter
           </button>
         )}
       </div>
 
-      {/* Station List */}
-      <div className="space-y-2">
-        {filteredAndSortedStations.length > 0 ? (
-          filteredAndSortedStations.map((station) => {
+      {/* Modular 2-Column Station Directory Grid */}
+      {filteredAndSortedStations.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-start">
+          {filteredAndSortedStations.map((station) => {
             const isExpanded = expandedStationId === station.id;
             const isFav = favoriteStationIds.includes(station.id);
+            const primaryColor = getColorClasses(getStationPrimaryColor(station.lines));
             const orderedExits = [...station.exits].sort(
               (a, b) => EXIT_POS_ORDER[a.position] - EXIT_POS_ORDER[b.position],
             );
@@ -347,42 +365,42 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
             return (
               <div
                 key={station.id}
-                className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl transition-all shadow-2xs overflow-hidden"
+                className={`bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-l-[5px] ${primaryColor.borderLeft}`}
               >
-                {/* Station Card Header */}
+                {/* Station Header Row */}
                 <div
                   onClick={() => toggleExpand(station.id)}
-                  className="p-3.5 flex items-center justify-between gap-3 cursor-pointer select-none hover:bg-[#FAF8F5] transition-colors"
+                  className="px-3 py-2.5 flex items-center justify-between gap-2 cursor-pointer select-none hover:bg-[var(--bg-canvas)] min-h-[56px]"
                 >
-                  <div className="flex items-center gap-2 truncate">
+                  <div className="flex items-center gap-2 min-w-0">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         onToggleFavoriteStation(station.id);
                       }}
-                      className="p-1 -ml-1 text-[#A8A399] hover:text-amber-500 transition-colors"
+                      className="metro-btn w-9 h-9 -ml-1 flex items-center justify-center text-[var(--ink-secondary)] hover:bg-[#FFD400] hover:text-[#16181D] shrink-0"
                       title={isFav ? 'Ta bort från favoriter' : 'Lägg till i favoriter'}
+                      aria-label={isFav ? 'Ta bort favoritstation' : 'Spara favoritstation'}
                     >
-                      <Star
-                        className={`w-4 h-4 ${
-                          isFav ? 'text-amber-500 fill-amber-500' : 'text-[#B5AEA0]'
-                        }`}
+                      <MetroBookmarkIcon
+                        filled={isFav}
+                        className={`w-4 h-4 ${isFav ? 'text-[#F26D21]' : ''}`}
                       />
                     </button>
 
-                    <div className="truncate">
-                      <div className="text-sm font-bold text-[#1F1D1A] truncate">
+                    <div className="min-w-0">
+                      <div className="font-display text-sm font-bold text-[var(--ink-primary)] truncate">
                         {station.name}
                       </div>
-                      <div className="text-[11px] text-[#78736B]">
-                        {station.exits.length} uppgång{station.exits.length === 1 ? '' : 'ar'}
+                      <div className="font-mono-tabular text-[11px] font-medium text-[var(--ink-secondary)]">
+                        {station.exits.length}{' '}
+                        {station.exits.length === 1 ? 'uppgång' : 'uppgångar'}
                       </div>
                     </div>
                   </div>
 
-                  {/* Lines & Expand icon */}
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0">
                     <div className="flex items-center gap-1">
                       {station.lines.map((lineId) => {
                         const line = METRO_LINES[lineId];
@@ -391,7 +409,7 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
                         return (
                           <span
                             key={lineId}
-                            className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full ${c.bg} text-white`}
+                            className={`font-mono-tabular text-[11px] font-bold w-6 h-5 inline-flex items-center justify-center ${c.bg} ${c.fgOnBg}`}
                           >
                             {lineId}
                           </span>
@@ -399,33 +417,32 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
                       })}
                     </div>
                     {isExpanded ? (
-                      <ChevronUp className="w-4 h-4 text-[#78736B]" />
+                      <MetroChevronUp className="w-4 h-4 text-[var(--ink-primary)]" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-[#78736B]" />
+                      <MetroChevronDown className="w-4 h-4 text-[var(--ink-secondary)]" />
                     )}
                   </div>
                 </div>
 
-                {/* Collapsible Exits & Actions */}
+                {/* Expanded Station Exits & Quick Actions */}
                 {isExpanded && (
-                  <div className="p-3.5 pt-0 border-t border-[#F0ECE1] bg-[#FAF8F5] space-y-3">
-                    <div className="pt-2.5 space-y-2">
-                      <div className="text-[11px] font-semibold text-[#6B665F] uppercase tracking-wider">
+                  <div className="border-t border-[var(--grid-divider)] bg-[var(--bg-canvas)] p-3 space-y-3">
+                    <div className="space-y-1.5">
+                      <div className="signage-label text-[var(--ink-secondary)]">
                         Perrongens uppgångar
                       </div>
 
-                      <div className="space-y-1.5">
+                      <div className="divide-y divide-[var(--grid-divider)] border border-[var(--grid-divider)] bg-[var(--bg-surface)]">
                         {orderedExits.map((exit) => (
                           <div
                             key={exit.id}
-                            className="p-2.5 bg-[#FFFFFF] rounded-xl border border-[#E7E2D9] flex items-center justify-between gap-2"
+                            className="p-2.5 flex items-center justify-between gap-2"
                           >
-                            <div className="truncate">
-                              <div className="text-xs font-bold text-[#1F1D1A] truncate">
+                            <div className="min-w-0">
+                              <div className="text-xs font-bold text-[var(--ink-primary)] truncate">
                                 {exit.name}
                               </div>
-                              <div className="text-[10px] text-[#78736B]">
-                                Läge:{' '}
+                              <div className="text-[11px] text-[var(--ink-secondary)]">
                                 {exit.position === 'up'
                                   ? 'Norra / västra perrongänden'
                                   : exit.position === 'down'
@@ -436,12 +453,14 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
 
                             <div className="shrink-0">
                               {exit.hasElevator ? (
-                                <span className="inline-flex items-center gap-1 text-[#2E7D32] bg-[#EAF5EE] px-1.5 py-0.5 rounded text-[10px] font-medium border border-[#C8E7D3]">
-                                  🛗 Hiss
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#00C2CB] text-[#16181D] text-[10px] font-bold uppercase tracking-[0.06em]">
+                                  <MetroElevatorIcon className="w-3 h-3" />
+                                  <span>Hiss</span>
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-1 text-[#8E8980] bg-[#FAF8F5] px-1.5 py-0.5 rounded text-[10px] border border-[#E7E2D9]">
-                                  Trappor
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--bg-canvas)] border border-[var(--grid-divider)] text-[var(--ink-secondary)] text-[10px] font-bold uppercase tracking-[0.06em]">
+                                  <MetroStairsIcon className="w-3 h-3" />
+                                  <span>Trappor</span>
                                 </span>
                               )}
                             </div>
@@ -450,19 +469,18 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
                       </div>
                     </div>
 
-                    {/* Quick navigation buttons */}
-                    <div className="pt-1 flex items-center gap-2">
+                    <div className="grid grid-cols-2 gap-2">
                       <button
                         type="button"
                         onClick={() => onSelectStationAsFrom(station)}
-                        className="flex-1 py-1.5 px-3 bg-[#FFFFFF] border border-[#D9D3C7] hover:border-[#1F1D1A] text-[#1F1D1A] text-xs font-semibold rounded-xl transition-all"
+                        className="metro-btn h-10 px-3 bg-[var(--bg-surface)] border border-[var(--grid-divider)] text-[var(--ink-primary)] hover:bg-[#00A859] hover:border-[#00A859] hover:text-[#FFFFFF] text-xs font-bold uppercase tracking-[0.06em]"
                       >
                         Res härifrån
                       </button>
                       <button
                         type="button"
                         onClick={() => onSelectStationAsTo(station)}
-                        className="flex-1 py-1.5 px-3 bg-[#006298] hover:bg-[#005180] text-white text-xs font-semibold rounded-xl transition-all"
+                        className="metro-btn h-10 px-3 bg-[#008DD0] text-[#FFFFFF] hover:bg-[#FFD400] hover:text-[#16181D] text-xs font-bold uppercase tracking-[0.06em]"
                       >
                         Res hit
                       </button>
@@ -471,20 +489,21 @@ export const StationBrowser: React.FC<StationBrowserProps> = ({
                 )}
               </div>
             );
-          })
-        ) : (
-          <div className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-8 text-center text-xs text-[#78736B] space-y-2">
-            <MapPin className="w-6 h-6 text-[#A8A399] mx-auto" />
-            <p>Inga stationer matchade din sökning eller ditt filter.</p>
-            {colorFilter === 'fav' && (
-              <p className="text-[11px] text-[#A8A399]">
-                Du har inte lagt till några favoritstationer än. Tryck på stjärnan bredvid valfri
-                station för att spara den!
-              </p>
-            )}
+          })}
+        </div>
+      ) : (
+        <div className="bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-l-[5px] border-l-[#F26D21] p-8 text-center space-y-2">
+          <div className="font-display text-sm font-bold text-[var(--ink-primary)]">
+            Inga stationer matchade din sökning eller ditt filter.
           </div>
-        )}
-      </div>
+          {colorFilter === 'fav' && (
+            <p className="text-xs text-[var(--ink-secondary)] max-w-md mx-auto">
+              Du har inte lagt till några favoritstationer än. Tryck på bokmärket bredvid valfri
+              station för att spara den.
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

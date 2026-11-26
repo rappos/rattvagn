@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Download, Share, X } from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
+import { MetroCloseIcon, MetroDownloadIcon, MetroShareIcon } from './MetroIcons';
 
 export const PWAInstallButton: React.FC = () => {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
@@ -32,11 +32,11 @@ export const PWAInstallButton: React.FC = () => {
         type="button"
         onClick={handleInstallClick}
         disabled={isInstalling}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1F1D1A] text-[#FAF8F5] text-xs font-semibold hover:bg-black active:scale-95 transition-all shadow-xs"
+        className="metro-btn inline-flex items-center gap-1.5 h-9 px-3 bg-[#00A859] text-[#FFFFFF] text-xs font-bold uppercase tracking-[0.06em] hover:bg-[#FFFFFF] hover:text-[#16181D] disabled:opacity-60"
         title="Installera som app på din mobil"
       >
-        <Download className="w-3.5 h-3.5" />
-        <span>Installera app</span>
+        <MetroDownloadIcon className="w-3.5 h-3.5" />
+        <span className="hidden sm:inline">Installera</span>
       </button>
     );
   }
@@ -47,71 +47,75 @@ export const PWAInstallButton: React.FC = () => {
         <button
           type="button"
           onClick={() => setShowIOSGuide(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#D9D3C7] bg-[#FAF8F5] text-[#3D3A35] text-xs font-medium hover:bg-white active:scale-95 transition-all"
+          className="metro-btn inline-flex items-center gap-1.5 h-9 px-3 bg-[#00A859] text-[#FFFFFF] text-xs font-bold uppercase tracking-[0.06em] hover:bg-[#FFFFFF] hover:text-[#16181D]"
+          title="Spara Rätt Vagn som app på iPhone"
         >
-          <Download className="w-3.5 h-3.5 text-[#006298]" />
-          <span>Spara app</span>
+          <MetroDownloadIcon className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Spara app</span>
         </button>
 
         {showIOSGuide && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-fadeIn">
-            <div className="w-full max-w-sm rounded-2xl bg-[#FFFFFF] border border-[#E7E2D9] p-5 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[#F0ECE1]">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-[#006298] text-white font-bold flex items-center justify-center text-xs">
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#16181D]/80 p-3">
+            <div className="w-full max-w-sm bg-[var(--bg-surface)] border-2 border-[var(--ink-primary)] border-t-[6px] border-t-[#008DD0] text-[var(--ink-primary)]">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--grid-divider)]">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 bg-[#008DD0] text-[#FFFFFF] font-display font-bold flex items-center justify-center text-sm">
                     T
                   </div>
-                  <h3 className="text-sm font-bold text-[#1F1D1A]">
-                    Installera Rätt Vagn på iPhone
+                  <h3 className="text-sm font-bold text-[var(--ink-primary)] uppercase tracking-[0.02em]">
+                    Installera på iPhone
                   </h3>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowIOSGuide(false)}
-                  className="p-1 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                  aria-label="Stäng"
+                  className="metro-btn w-9 h-9 flex items-center justify-center border border-[var(--grid-divider)] text-[var(--ink-secondary)] hover:bg-[#16181D] hover:text-[#FFFFFF] dark:hover:bg-[#00A859] dark:hover:text-[#FFFFFF]"
                 >
-                  <X className="w-4 h-4" />
+                  <MetroCloseIcon className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="space-y-3 text-xs text-[#524E48] leading-relaxed">
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-[#F0ECE1] font-bold text-[#1F1D1A] flex items-center justify-center shrink-0 text-[11px]">
+              <div className="divide-y divide-[var(--grid-divider)] text-xs text-[var(--ink-primary)]">
+                <div className="flex items-start gap-3 p-4">
+                  <span className="w-6 h-6 bg-[#008DD0] text-[#FFFFFF] font-mono-tabular font-bold flex items-center justify-center shrink-0 text-xs">
                     1
                   </span>
-                  <p>
+                  <p className="leading-relaxed">
                     Tryck på <strong>Dela-ikonen</strong>{' '}
-                    <Share className="inline w-3.5 h-3.5 mx-0.5 text-[#006298]" /> i Safaris nedre
-                    verktygsfält.
+                    <MetroShareIcon className="inline w-3.5 h-3.5 mx-0.5 text-[#008DD0]" /> i Safaris
+                    nedre verktygsfält.
                   </p>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-[#F0ECE1] font-bold text-[#1F1D1A] flex items-center justify-center shrink-0 text-[11px]">
+                <div className="flex items-start gap-3 p-4">
+                  <span className="w-6 h-6 bg-[#008DD0] text-[#FFFFFF] font-mono-tabular font-bold flex items-center justify-center shrink-0 text-xs">
                     2
                   </span>
-                  <p>
+                  <p className="leading-relaxed">
                     Scrolla ned och välj <strong>Lägg till på hemskärmen</strong>.
                   </p>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-[#F0ECE1] font-bold text-[#1F1D1A] flex items-center justify-center shrink-0 text-[11px]">
+                <div className="flex items-start gap-3 p-4">
+                  <span className="w-6 h-6 bg-[#008DD0] text-[#FFFFFF] font-mono-tabular font-bold flex items-center justify-center shrink-0 text-xs">
                     3
                   </span>
-                  <p>
+                  <p className="leading-relaxed">
                     Tryck på <strong>Lägg till</strong> uppe till höger. Klart!
                   </p>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setShowIOSGuide(false)}
-                className="w-full py-2.5 rounded-xl bg-[#1F1D1A] text-white font-semibold text-xs hover:bg-black transition-colors"
-              >
-                Uppfattat
-              </button>
+              <div className="p-3 border-t border-[var(--grid-divider)]">
+                <button
+                  type="button"
+                  onClick={() => setShowIOSGuide(false)}
+                  className="metro-btn w-full py-2.5 px-4 bg-[#008DD0] text-[#FFFFFF] hover:bg-[#00A859] hover:text-[#FFFFFF] font-bold text-xs uppercase tracking-[0.08em]"
+                >
+                  Uppfattat
+                </button>
+              </div>
             </div>
           </div>
         )}

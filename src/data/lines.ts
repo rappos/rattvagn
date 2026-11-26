@@ -3,22 +3,21 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  * Linjedefinitioner för Stockholms tunnelbana.
- * Alla linjer är modulärt definierade och lätta att utöka för framtida projekt.
+ * Färger följer exakt Tunnelbanans designsystem.
  */
 
 import type { MetroColor, MetroLineInfo } from '../types/metro';
 
 export const METRO_LINES: Record<number, MetroLineInfo> = {
-  // Gröna linjen (Trunk 1)
+  // Gröna linjen (Hässelby Emerald #00A859)
   17: {
     id: 17,
     name: 'Grön linje 17',
     color: 'green',
-    colorHex: '#189747',
-    bgClass: 'bg-emerald-600',
-    textClass: 'text-emerald-700 dark:text-emerald-400',
-    badgeBg:
-      'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800',
+    colorHex: '#00A859',
+    bgClass: 'bg-[#00A859]',
+    textClass: 'text-[#00A859]',
+    badgeBg: 'bg-[#00A859] text-[#FFFFFF] border-[#00A859]',
     terminals: {
       northWest: 'Åkeshov / Hässelby strand',
       southEast: 'Skarpnäck',
@@ -29,11 +28,10 @@ export const METRO_LINES: Record<number, MetroLineInfo> = {
     id: 18,
     name: 'Grön linje 18',
     color: 'green',
-    colorHex: '#189747',
-    bgClass: 'bg-emerald-600',
-    textClass: 'text-emerald-700 dark:text-emerald-400',
-    badgeBg:
-      'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800',
+    colorHex: '#00A859',
+    bgClass: 'bg-[#00A859]',
+    textClass: 'text-[#00A859]',
+    badgeBg: 'bg-[#00A859] text-[#FFFFFF] border-[#00A859]',
     terminals: {
       northWest: 'Hässelby strand',
       southEast: 'Farsta strand',
@@ -44,11 +42,10 @@ export const METRO_LINES: Record<number, MetroLineInfo> = {
     id: 19,
     name: 'Grön linje 19',
     color: 'green',
-    colorHex: '#189747',
-    bgClass: 'bg-emerald-600',
-    textClass: 'text-emerald-700 dark:text-emerald-400',
-    badgeBg:
-      'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800',
+    colorHex: '#00A859',
+    bgClass: 'bg-[#00A859]',
+    textClass: 'text-[#00A859]',
+    badgeBg: 'bg-[#00A859] text-[#FFFFFF] border-[#00A859]',
     terminals: {
       northWest: 'Hässelby strand',
       southEast: 'Hagsätra',
@@ -56,16 +53,15 @@ export const METRO_LINES: Record<number, MetroLineInfo> = {
     description: 'Hässelby strand – T-Centralen – Hagsätra',
   },
 
-  // Röda linjen (Trunk 2)
+  // Röda linjen (Solna Crimson #E53935)
   13: {
     id: 13,
     name: 'Röd linje 13',
     color: 'red',
-    colorHex: '#D8232A',
-    bgClass: 'bg-rose-600',
-    textClass: 'text-rose-700 dark:text-rose-400',
-    badgeBg:
-      'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800',
+    colorHex: '#E53935',
+    bgClass: 'bg-[#E53935]',
+    textClass: 'text-[#E53935]',
+    badgeBg: 'bg-[#E53935] text-[#FFFFFF] border-[#E53935]',
     terminals: {
       northWest: 'Ropsten',
       southEast: 'Norsborg',
@@ -76,11 +72,10 @@ export const METRO_LINES: Record<number, MetroLineInfo> = {
     id: 14,
     name: 'Röd linje 14',
     color: 'red',
-    colorHex: '#D8232A',
-    bgClass: 'bg-rose-600',
-    textClass: 'text-rose-700 dark:text-rose-400',
-    badgeBg:
-      'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800',
+    colorHex: '#E53935',
+    bgClass: 'bg-[#E53935]',
+    textClass: 'text-[#E53935]',
+    badgeBg: 'bg-[#E53935] text-[#FFFFFF] border-[#E53935]',
     terminals: {
       northWest: 'Mörby centrum',
       southEast: 'Fruängen',
@@ -88,16 +83,15 @@ export const METRO_LINES: Record<number, MetroLineInfo> = {
     description: 'Mörby centrum – T-Centralen – Fruängen',
   },
 
-  // Blå linjen (Trunk 3)
+  // Blå linjen (T-Centralen Blue #008DD0)
   10: {
     id: 10,
     name: 'Blå linje 10',
     color: 'blue',
-    colorHex: '#007AC9',
-    bgClass: 'bg-sky-600',
-    textClass: 'text-sky-700 dark:text-sky-400',
-    badgeBg:
-      'bg-sky-100 text-sky-800 border-sky-300 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800',
+    colorHex: '#008DD0',
+    bgClass: 'bg-[#008DD0]',
+    textClass: 'text-[#008DD0]',
+    badgeBg: 'bg-[#008DD0] text-[#FFFFFF] border-[#008DD0]',
     terminals: {
       northWest: 'Hjulsta',
       southEast: 'Kungsträdgården',
@@ -108,11 +102,10 @@ export const METRO_LINES: Record<number, MetroLineInfo> = {
     id: 11,
     name: 'Blå linje 11',
     color: 'blue',
-    colorHex: '#007AC9',
-    bgClass: 'bg-sky-600',
-    textClass: 'text-sky-700 dark:text-sky-400',
-    badgeBg:
-      'bg-sky-100 text-sky-800 border-sky-300 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800',
+    colorHex: '#008DD0',
+    bgClass: 'bg-[#008DD0]',
+    textClass: 'text-[#008DD0]',
+    badgeBg: 'bg-[#008DD0] text-[#FFFFFF] border-[#008DD0]',
     terminals: {
       northWest: 'Akalla (snart Barkarby)',
       southEast: 'Kungsträdgården (snart Nacka/Gullmarsplan)',
@@ -120,16 +113,15 @@ export const METRO_LINES: Record<number, MetroLineInfo> = {
     description: 'Akalla – Fridhemsplan – Kungsträdgården',
   },
 
-  // Gula linjen (Framtida / under utbyggnad)
+  // Gula linjen (Arenastaden Sun #FFD400 — alltid mörk text #16181D)
   25: {
     id: 25,
     name: 'Gul linje 25',
     color: 'yellow',
-    colorHex: '#E8A900',
-    bgClass: 'bg-amber-500',
-    textClass: 'text-amber-700 dark:text-amber-400',
-    badgeBg:
-      'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800',
+    colorHex: '#FFD400',
+    bgClass: 'bg-[#FFD400]',
+    textClass: 'text-[#16181D] dark:text-[#FFD400]',
+    badgeBg: 'bg-[#FFD400] text-[#16181D] border-[#FFD400]',
     terminals: {
       northWest: 'Arenastaden',
       southEast: 'Odenplan (senare Älvsjö)',
@@ -142,35 +134,56 @@ export function getColorClasses(color: MetroColor) {
   switch (color) {
     case 'green':
       return {
-        bg: 'bg-[#138A36]',
-        text: 'text-[#138A36]',
-        border: 'border-[#138A36]',
-        badge: 'bg-[#EAF5EE] text-[#138A36] border border-[#C8E7D3]',
-        dot: 'bg-[#138A36]',
+        hex: '#00A859',
+        bg: 'bg-[#00A859]',
+        fgOnBg: 'text-[#FFFFFF]',
+        text: 'text-[#00A859]',
+        border: 'border-[#00A859]',
+        borderLeft: 'border-l-[#00A859]',
+        badge: 'bg-[#00A859] text-[#FFFFFF]',
+        dot: 'bg-[#00A859]',
       };
     case 'red':
       return {
-        bg: 'bg-[#D32F2F]',
-        text: 'text-[#D32F2F]',
-        border: 'border-[#D32F2F]',
-        badge: 'bg-[#FDF0F0] text-[#D32F2F] border border-[#F8CCCC]',
-        dot: 'bg-[#D32F2F]',
+        hex: '#E53935',
+        bg: 'bg-[#E53935]',
+        fgOnBg: 'text-[#FFFFFF]',
+        text: 'text-[#E53935]',
+        border: 'border-[#E53935]',
+        borderLeft: 'border-l-[#E53935]',
+        badge: 'bg-[#E53935] text-[#FFFFFF]',
+        dot: 'bg-[#E53935]',
       };
     case 'blue':
       return {
-        bg: 'bg-[#006298]',
-        text: 'text-[#006298]',
-        border: 'border-[#006298]',
-        badge: 'bg-[#EAF3F9] text-[#006298] border border-[#C4DFEE]',
-        dot: 'bg-[#006298]',
+        hex: '#008DD0',
+        bg: 'bg-[#008DD0]',
+        fgOnBg: 'text-[#FFFFFF]',
+        text: 'text-[#008DD0]',
+        border: 'border-[#008DD0]',
+        borderLeft: 'border-l-[#008DD0]',
+        badge: 'bg-[#008DD0] text-[#FFFFFF]',
+        dot: 'bg-[#008DD0]',
       };
     case 'yellow':
       return {
-        bg: 'bg-[#D97706]',
-        text: 'text-[#D97706]',
-        border: 'border-[#D97706]',
-        badge: 'bg-[#FEF7EA] text-[#D97706] border border-[#FBE3B5]',
-        dot: 'bg-[#D97706]',
+        hex: '#FFD400',
+        bg: 'bg-[#FFD400]',
+        fgOnBg: 'text-[#16181D]',
+        text: 'text-[#16181D] dark:text-[#FFD400]',
+        border: 'border-[#FFD400]',
+        borderLeft: 'border-l-[#FFD400]',
+        badge: 'bg-[#FFD400] text-[#16181D]',
+        dot: 'bg-[#FFD400]',
       };
   }
+}
+
+/**
+ * Returnerar den primära färgen för en station baserat på dess linjenummer.
+ */
+export function getStationPrimaryColor(lines: number[]): MetroColor {
+  if (lines.length === 0) return 'blue';
+  const first = METRO_LINES[lines[0]];
+  return first ? first.color : 'blue';
 }

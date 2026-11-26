@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ArrowRight, Check } from 'lucide-react';
 import type React from 'react';
 import { getColorClasses } from '../data/lines';
 import type { CarPosition, MetroColor } from '../types/metro';
+import { MetroArrowRight, MetroCheckIcon } from './MetroIcons';
 
 interface TrainVisualizerProps {
   directionTitle: string;
@@ -30,118 +30,108 @@ export const TrainVisualizer: React.FC<TrainVisualizerProps> = ({
   const colorStyles = getColorClasses(color);
 
   return (
-    <div className="w-full bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-4 shadow-2xs">
-      {/* Direction Header */}
-      <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-[#F0ECE1]">
+    <section
+      aria-label="Tågdiagram och färdriktning"
+      className={`w-full bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-t-[5px] ${colorStyles.border}`}
+    >
+      {/* Platform Direction Header Board */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-[var(--grid-divider)] bg-[var(--bg-canvas)]">
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${colorStyles.bg}`} />
-          <span className="text-[11px] font-bold text-[#6B665F] uppercase tracking-wider">
-            Färdriktning
+          <span className={`w-2.5 h-2.5 shrink-0 ${colorStyles.bg}`} />
+          <span className="signage-label text-[var(--ink-secondary)]">Färdriktning</span>
+        </div>
+
+        <div className="inline-flex items-center gap-2 font-display text-sm sm:text-base font-bold text-[var(--ink-primary)]">
+          <span>{directionTitle}</span>
+          <span
+            className={`inline-flex items-center justify-center w-6 h-6 ${colorStyles.bg} ${colorStyles.fgOnBg}`}
+          >
+            <MetroArrowRight className="w-3.5 h-3.5" />
           </span>
         </div>
+      </div>
 
-        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1F1D1A]">
-          <span>{directionTitle}</span>
-          <ArrowRight className="w-3.5 h-3.5 text-[#006298]" />
+      {/* Simplified 3-Car Block Diagram */}
+      <div className="p-3 sm:p-4">
+        <div className="grid grid-cols-3 gap-1.5">
+          <CarButton
+            label="Längst bak"
+            exitsCount={backExitsCount}
+            isSelected={activeCar === 'back'}
+            onClick={() => onSelectCar?.('back')}
+            lineBg={colorStyles.bg}
+          />
+
+          <CarButton
+            label="I mitten"
+            exitsCount={middleExitsCount}
+            isSelected={activeCar === 'middle'}
+            onClick={() => onSelectCar?.('middle')}
+            lineBg={colorStyles.bg}
+          />
+
+          <CarButton
+            label="Längst fram"
+            exitsCount={frontExitsCount}
+            isSelected={activeCar === 'front'}
+            onClick={() => onSelectCar?.('front')}
+            lineBg={colorStyles.bg}
+          />
         </div>
       </div>
-
-      {/* 3 Flat Minimalist Train Cars */}
-      <div className="grid grid-cols-3 gap-2">
-        {/* CAR 1: BAK */}
-        <CarButton
-          label="Längst bak"
-          subLabel="Bakre änden"
-          exitsCount={backExitsCount}
-          isSelected={activeCar === 'back'}
-          onClick={() => onSelectCar?.('back')}
-          lineBg={colorStyles.bg}
-          isNose={false}
-        />
-
-        {/* CAR 2: MITTEN */}
-        <CarButton
-          label="I mitten"
-          subLabel="Mittenvagn"
-          exitsCount={middleExitsCount}
-          isSelected={activeCar === 'middle'}
-          onClick={() => onSelectCar?.('middle')}
-          lineBg={colorStyles.bg}
-          isNose={false}
-        />
-
-        {/* CAR 3: FRAM */}
-        <CarButton
-          label="Längst fram"
-          subLabel="Första vagnen"
-          exitsCount={frontExitsCount}
-          isSelected={activeCar === 'front'}
-          onClick={() => onSelectCar?.('front')}
-          lineBg={colorStyles.bg}
-          isNose={true}
-        />
-      </div>
-
-      {/* Direction Indicator */}
-      <div className="mt-3 pt-2.5 border-t border-[#F0ECE1] flex items-center justify-between text-[11px] text-[#78736B]">
-        <span>Bakänden av tåget</span>
-        <div className="flex items-center gap-1 font-semibold text-[#1F1D1A]">
-          <span>FÄRDRIKTNING</span>
-          <ArrowRight className="w-3.5 h-3.5 text-[#006298]" />
-        </div>
-        <span>Förarhytt (Fram)</span>
-      </div>
-    </div>
+    </section>
   );
 };
 
 interface CarButtonProps {
   label: string;
-  subLabel: string;
   exitsCount: number;
   isSelected: boolean;
   onClick: () => void;
   lineBg: string;
-  isNose: boolean;
 }
 
 const CarButton: React.FC<CarButtonProps> = ({
   label,
-  subLabel,
   exitsCount,
   isSelected,
   onClick,
   lineBg,
-  isNose,
 }) => {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`relative rounded-xl border text-left p-2.5 sm:p-3 transition-all ${
+      aria-pressed={isSelected}
+      className={`metro-btn relative text-left p-2.5 sm:p-3.5 border transition-colors min-h-[96px] flex flex-col justify-between ${
         isSelected
-          ? 'bg-[#F2F7FA] border-[#006298] ring-1 ring-[#006298]'
-          : 'bg-[#FAF8F5] border-[#E7E2D9] hover:bg-white hover:border-[#B5AEA0]'
-      } ${isNose ? 'rounded-r-2xl' : ''}`}
+          ? 'bg-[#16181D] text-[#FFFFFF] border-[#16181D] dark:bg-[#F7F8FA] dark:text-[#16181D] dark:border-[#F7F8FA]'
+          : 'bg-[var(--bg-canvas)] text-[var(--ink-primary)] border-[var(--grid-divider)] hover:border-[#008DD0] hover:bg-[var(--bg-surface)]'
+      }`}
     >
-      {/* Top line-color stripe */}
-      <div className={`h-1 w-full rounded-full mb-2 ${lineBg}`} />
+      <div>
+        {/* Single clean line-color bar */}
+        <div className={`h-1.5 w-full mb-3 ${lineBg}`} />
 
-      <div className="flex items-center justify-between gap-1">
-        <span className="text-xs sm:text-sm font-bold text-[#1F1D1A]">{label}</span>
-        {isSelected && <Check className="w-3.5 h-3.5 text-[#006298]" />}
+        <div className="flex items-center justify-between gap-1">
+          <span className="font-display text-xs sm:text-sm font-bold leading-tight">{label}</span>
+          {isSelected && (
+            <span className="w-4 h-4 bg-[#00A859] text-[#FFFFFF] inline-flex items-center justify-center shrink-0">
+              <MetroCheckIcon className="w-3 h-3" />
+            </span>
+          )}
+        </div>
       </div>
 
-      <div className="text-[10px] text-[#78736B] mt-0.5">{subLabel}</div>
-
-      <div className="mt-2">
+      {/* Exit Count */}
+      <div className="mt-3 pt-2 border-t border-current/15">
         <span
-          className={`inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded ${
-            exitsCount > 0
-              ? isSelected
-                ? 'bg-[#006298] text-white'
-                : 'bg-[#EAE5DC] text-[#3D3A35]'
-              : 'text-[#A8A399]'
+          className={`inline-block font-mono-tabular text-[11px] font-bold px-1.5 py-0.5 ${
+            isSelected
+              ? 'bg-[#008DD0] text-[#FFFFFF]'
+              : exitsCount > 0
+                ? 'bg-[#16181D] text-[#FFFFFF] dark:bg-[#F7F8FA] dark:text-[#16181D]'
+                : 'text-[var(--ink-secondary)]'
           }`}
         >
           {exitsCount} {exitsCount === 1 ? 'uppgång' : 'uppgångar'}

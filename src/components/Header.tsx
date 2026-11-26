@@ -3,11 +3,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Info, MapPin, Train, WifiOff } from 'lucide-react';
 import type React from 'react';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import type { ThemeMode } from '../hooks/useTheme';
 import type { User } from '../lib/firebase';
 import { AuthButton } from './AuthButton';
+import {
+  MetroHouseIcon,
+  MetroInfoIcon,
+  MetroMoonIcon,
+  MetroSunIcon,
+  MetroTrainIcon,
+} from './MetroIcons';
 import { PWAInstallButton } from './PWAInstallButton';
 
 export type TabType = 'resor' | 'stationer' | 'om';
@@ -17,92 +24,141 @@ interface HeaderProps {
   setActiveTab: (tab: TabType) => void;
   user: User | null;
   authLoading: boolean;
+  theme: ThemeMode;
+  onToggleTheme: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, user, authLoading }) => {
+export const Header: React.FC<HeaderProps> = ({
+  activeTab,
+  setActiveTab,
+  user,
+  authLoading,
+  theme,
+  onToggleTheme,
+}) => {
   const isOnline = useOnlineStatus();
 
   return (
-    <header className="bg-[#FAF8F5] border-b border-[#E7E2D9] sticky top-0 z-40 transition-colors">
-      <div className="max-w-xl mx-auto px-4 pt-3 pb-2 sm:py-3">
-        {/* Top bar: Brand + Actions */}
-        <div className="flex items-center justify-between gap-3 mb-2.5">
-          {/* Logo & Name */}
-          <div
-            onClick={() => setActiveTab('resor')}
-            className="flex items-center gap-2.5 cursor-pointer group select-none"
-          >
-            {/* Stockholm Metro 'T' symbol */}
-            <div className="w-8 h-8 rounded-full bg-[#005A9C] text-white flex items-center justify-center font-black text-lg shadow-2xs group-hover:scale-105 transition-transform">
-              T
-            </div>
-            <div>
-              <h1 className="text-base sm:text-lg font-bold text-[#1F1D1A] tracking-tight leading-none">
-                Rätt Vagn
-              </h1>
-              <p className="text-[11px] text-[#78736B] leading-tight">Stockholms tunnelbana</p>
-            </div>
+    <header className="sticky top-0 z-40 bg-[#008DD0] dark:bg-[#16181D] text-[#FFFFFF] border-b border-[#16181D]/20 dark:border-[#2E3340]">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6">
+        {/* Compact Platform Signboard Row */}
+        <div className="flex items-center justify-between gap-2 h-13 sm:h-14">
+          {/* Brand Anchor + Desktop Nav */}
+          <div className="flex items-center gap-6 min-w-0">
+            <button
+              type="button"
+              onClick={() => setActiveTab('resor')}
+              className="flex items-center gap-2.5 text-left group shrink-0"
+            >
+              {/* Razor-sharp Stockholm Metro T square mark */}
+              <div className="w-8 h-8 bg-[#FFFFFF] dark:bg-[#008DD0] text-[#008DD0] dark:text-[#FFFFFF] flex items-center justify-center font-display font-bold text-xl leading-none shrink-0 group-hover:bg-[#00A859] group-hover:text-[#FFFFFF]">
+                T
+              </div>
+              <span className="font-display text-base sm:text-lg font-bold tracking-[-0.02em] text-[#FFFFFF] leading-none">
+                RÄTT VAGN
+              </span>
+            </button>
+
+            {/* Desktop Inline Navigation Tabs */}
+            <nav
+              aria-label="Huvudmeny"
+              className="hidden md:flex items-stretch h-14 border-l border-[#FFFFFF]/20 dark:border-[#2E3340]"
+            >
+              {(
+                [
+                  { id: 'resor', label: 'Resor', Icon: MetroTrainIcon },
+                  { id: 'stationer', label: 'Stationer', Icon: MetroHouseIcon },
+                  { id: 'om', label: 'Om', Icon: MetroInfoIcon },
+                ] as const
+              ).map(({ id, label, Icon }) => {
+                const isActive = activeTab === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setActiveTab(id)}
+                    className={`metro-btn relative px-5 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.08em] border-r border-[#FFFFFF]/20 dark:border-[#2E3340] ${
+                      isActive
+                        ? 'bg-[#16181D] dark:bg-[#1F222A] text-[#FFFFFF]'
+                        : 'text-[#FFFFFF]/85 hover:bg-[#16181D]/25 dark:hover:bg-[#1F222A] hover:text-[#FFFFFF]'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{label}</span>
+                    {isActive && (
+                      <span className="absolute bottom-0 left-0 right-0 h-1 bg-[#00A859]" />
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
 
-          {/* Right utilities: Offline status, PWA Install, Auth */}
-          <div className="flex items-center gap-2">
+          {/* Right Utilities: Offline Block, Theme Switch, PWA Install, Auth */}
+          <div className="flex items-center gap-1.5 shrink-0">
             {!isOnline && (
               <span
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-medium"
-                title="Nedkopplad – sparade data används"
+                className="inline-flex items-center gap-1.5 h-9 px-2.5 bg-[#E53935] text-[#FFFFFF] text-[11px] font-bold uppercase tracking-[0.06em]"
+                title="Nedkopplad – sparade stationsdata används"
               >
-                <WifiOff className="w-3 h-3 text-amber-700" />
+                <span className="w-2 h-2 bg-[#FFFFFF]" />
                 <span className="hidden xs:inline">Offline</span>
               </span>
             )}
+
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              aria-label={theme === 'dark' ? 'Byt till ljust läge' : 'Byt till nattågsläge'}
+              title={theme === 'dark' ? 'Dagsläge' : 'Nattåg (mörkt läge)'}
+              className="metro-btn w-9 h-9 flex items-center justify-center border border-[#FFFFFF]/35 bg-[#16181D]/20 dark:bg-[#1F222A] text-[#FFFFFF] hover:bg-[#00A859] hover:text-[#FFFFFF] hover:border-[#00A859]"
+            >
+              {theme === 'dark' ? (
+                <MetroSunIcon className="w-4 h-4" />
+              ) : (
+                <MetroMoonIcon className="w-4 h-4" />
+              )}
+            </button>
 
             <PWAInstallButton />
             <AuthButton user={user} loading={authLoading} />
           </div>
         </div>
-
-        {/* Tab Navigation: Stationer | Resor | Om */}
-        <nav className="flex items-center p-1 bg-[#EFECE6] rounded-xl border border-[#E5E0D8]">
-          <button
-            type="button"
-            onClick={() => setActiveTab('resor')}
-            className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'resor'
-                ? 'bg-[#FFFFFF] text-[#1F1D1A] shadow-xs'
-                : 'text-[#6B665F] hover:text-[#1F1D1A]'
-            }`}
-          >
-            <Train className="w-3.5 h-3.5" />
-            <span>Resor</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('stationer')}
-            className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'stationer'
-                ? 'bg-[#FFFFFF] text-[#1F1D1A] shadow-xs'
-                : 'text-[#6B665F] hover:text-[#1F1D1A]'
-            }`}
-          >
-            <MapPin className="w-3.5 h-3.5" />
-            <span>Stationer</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('om')}
-            className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'om'
-                ? 'bg-[#FFFFFF] text-[#1F1D1A] shadow-xs'
-                : 'text-[#6B665F] hover:text-[#1F1D1A]'
-            }`}
-          >
-            <Info className="w-3.5 h-3.5" />
-            <span>Om</span>
-          </button>
-        </nav>
       </div>
+
+      {/* Mobile Full-Bleed Signboard Tab Strip */}
+      <nav
+        aria-label="Mobilmeny"
+        className="md:hidden grid grid-cols-3 border-t border-[#FFFFFF]/25 dark:border-[#2E3340] bg-[#16181D]"
+      >
+        {(
+          [
+            { id: 'resor', label: 'Resor', Icon: MetroTrainIcon },
+            { id: 'stationer', label: 'Stationer', Icon: MetroHouseIcon },
+            { id: 'om', label: 'Om', Icon: MetroInfoIcon },
+          ] as const
+        ).map(({ id, label, Icon }, idx) => {
+          const isActive = activeTab === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setActiveTab(id)}
+              className={`metro-btn relative h-11 px-2 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] ${
+                idx < 2 ? 'border-r border-[#2E3340]' : ''
+              } ${
+                isActive
+                  ? 'bg-[#1F222A] text-[#FFFFFF]'
+                  : 'bg-[#16181D] text-[#9BA3B4] hover:text-[#FFFFFF]'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span>{label}</span>
+              {isActive && <span className="absolute bottom-0 left-0 right-0 h-1 bg-[#00A859]" />}
+            </button>
+          );
+        })}
+      </nav>
     </header>
   );
 };

@@ -3,11 +3,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ArrowRight, ChevronDown, ChevronUp, Info, Shuffle, Star } from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
+import { getColorClasses } from '../data/lines';
 import type { CarPosition, JourneyPlan } from '../types/metro';
 import { ExitCard } from './ExitCard';
+import {
+  MetroArrowRight,
+  MetroBookmarkIcon,
+  MetroChevronDown,
+  MetroChevronUp,
+  MetroInfoIcon,
+  MetroTransferIcon,
+} from './MetroIcons';
 import { TrainVisualizer } from './TrainVisualizer';
 
 interface JourneyResultViewProps {
@@ -28,8 +36,9 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
   const { from, to, isSameStation, isDirect, legs, frontExits, middleExits, backExits } =
     journeyPlan;
 
-  const activeLeg = legs[legs.length - 1]; // destination leg
+  const activeLeg = legs[legs.length - 1];
   const evaluatedExits = activeLeg ? activeLeg.evaluatedExits : [];
+  const activeLineColors = activeLeg ? getColorClasses(activeLeg.line.color) : getColorClasses('blue');
 
   const displayedExits = selectedCar
     ? evaluatedExits.filter((e) => e.carPosition === selectedCar)
@@ -38,14 +47,17 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
   // Same station case
   if (isSameStation) {
     return (
-      <div className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-5 text-center shadow-2xs">
-        <div className="w-10 h-10 rounded-full bg-[#EAF3F9] text-[#006298] mx-auto flex items-center justify-center mb-2.5">
-          <Info className="w-5 h-5" />
+      <div className="bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-t-[5px] border-t-[#008DD0]">
+        <div className="p-4 border-b border-[var(--grid-divider)] flex items-center gap-3">
+          <div className="w-9 h-9 bg-[#008DD0] text-[#FFFFFF] flex items-center justify-center shrink-0">
+            <MetroInfoIcon className="w-4 h-4" />
+          </div>
+          <h2 className="font-display text-base sm:text-lg font-bold text-[var(--ink-primary)]">
+            {from.name} — alla uppgångar
+          </h2>
         </div>
-        <h3 className="text-base font-bold text-[#1F1D1A] mb-1">Samma station ({from.name})</h3>
-        <p className="text-xs text-[#78736B] mb-4">Här är alla uppgångar på stationen:</p>
 
-        <div className="grid grid-cols-1 gap-2 text-left">
+        <div className="p-3 sm:p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
           {evaluatedExits.map(({ exit, carPosition, carPositionLabel }) => (
             <ExitCard
               key={exit.id}
@@ -60,84 +72,127 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
   }
 
   return (
-    <div className="space-y-4">
-      {/* Route Header with Favorite Star */}
-      <div className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-4 shadow-2xs">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 truncate">
-            <span className="font-bold text-sm sm:text-base text-[#1F1D1A] truncate">
-              {from.name}
-            </span>
-            <ArrowRight className="w-4 h-4 text-[#A8A399] shrink-0" />
-            <span className="font-bold text-sm sm:text-base text-[#1F1D1A] truncate">
-              {to.name}
-            </span>
+    <div className="space-y-3">
+      {/* Overhead Route Departure Signboard */}
+      <div
+        className={`bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-l-[5px] ${activeLineColors.borderLeft}`}
+      >
+        <div className="p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 mb-1.5">
+              {activeLeg && (
+                <span
+                  className={`font-mono-tabular text-[11px] font-bold px-2 py-0.5 ${activeLineColors.bg} ${activeLineColors.fgOnBg}`}
+                >
+                  LINJE {activeLeg.line.id}
+                </span>
+              )}
+              <span className="signage-label text-[var(--ink-secondary)]">
+                {isDirect ? 'Direktresa' : 'Resa med 1 byte'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="font-display text-base sm:text-lg font-bold text-[var(--ink-primary)] leading-tight">
+                {from.name}
+              </h2>
+              <MetroArrowRight className="w-4 h-4 text-[#008DD0] shrink-0" />
+              <h2 className="font-display text-base sm:text-lg font-bold text-[var(--ink-primary)] leading-tight">
+                {to.name}
+              </h2>
+            </div>
           </div>
 
           <button
             type="button"
             onClick={onToggleFavoriteRoute}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border shrink-0 ${
+            className={`metro-btn inline-flex items-center justify-center gap-2 h-10 px-3.5 text-xs font-bold uppercase tracking-[0.06em] border shrink-0 ${
               isFavoriteRoute
-                ? 'bg-amber-50 border-amber-300 text-amber-800'
-                : 'bg-[#FAF8F5] border-[#E7E2D9] text-[#6B665F] hover:border-[#1F1D1A]'
+                ? 'bg-[#FFD400] border-[#FFD400] text-[#16181D] hover:bg-[#16181D] hover:border-[#16181D] hover:text-[#FFFFFF]'
+                : 'bg-[var(--bg-canvas)] border-[var(--grid-divider)] text-[var(--ink-primary)] hover:bg-[#008DD0] hover:border-[#008DD0] hover:text-[#FFFFFF]'
             }`}
             title={isFavoriteRoute ? 'Ta bort favoritsträcka' : 'Spara som favoritsträcka'}
           >
-            <Star
-              className={`w-3.5 h-3.5 ${
-                isFavoriteRoute ? 'text-amber-500 fill-amber-500' : 'text-[#8E8980]'
-              }`}
-            />
-            <span className="hidden xs:inline">
-              {isFavoriteRoute ? 'Sparad sträcka' : 'Spara sträcka'}
-            </span>
+            <MetroBookmarkIcon filled={isFavoriteRoute} className="w-3.5 h-3.5" />
+            <span>{isFavoriteRoute ? 'Sparad' : 'Spara sträcka'}</span>
           </button>
         </div>
       </div>
 
-      {/* Transfer Information (If multi-leg) */}
+      {/* Transfer Information (Multi-Leg) */}
       {!isDirect && legs.length >= 2 && (
-        <div className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-4 space-y-3">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#D97706] uppercase tracking-wider">
-            <Shuffle className="w-3.5 h-3.5" />
-            <span>Byte vid {legs[0].toStation.name}</span>
+        <div className="bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-l-[5px] border-l-[#F26D21]">
+          <div className="px-4 py-2.5 bg-[#F26D21] text-[#16181D] flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.08em]">
+              <MetroTransferIcon className="w-4 h-4" />
+              <span>Byte vid {legs[0].toStation.name}</span>
+            </div>
+            <span className="font-mono-tabular text-[11px] font-bold bg-[#16181D] text-[#FFFFFF] px-2 py-0.5">
+              2 DELSTRÄCKOR
+            </span>
           </div>
 
-          <div className="space-y-2 text-xs">
-            <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E7E2D9]">
-              <div className="font-semibold text-[#1F1D1A] mb-1">
-                Delsträcka 1: {legs[0].fromStation.name} ➔ {legs[0].toStation.name} (
-                {legs[0].line.name})
+          <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--grid-divider)] text-xs">
+            {/* Leg 1 */}
+            <div className="p-3.5 space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="signage-label text-[var(--ink-secondary)]">Delsträcka 1</span>
+                <span
+                  className={`font-mono-tabular text-[11px] font-bold px-1.5 py-0.5 ${
+                    getColorClasses(legs[0].line.color).bg
+                  } ${getColorClasses(legs[0].line.color).fgOnBg}`}
+                >
+                  {legs[0].line.id}
+                </span>
               </div>
-              <div className="text-[#138A36] font-bold">
-                Rekommendation för bytet: Stå{' '}
+
+              <div className="font-bold text-[var(--ink-primary)]">
+                {legs[0].fromStation.name} → {legs[0].toStation.name}
+              </div>
+
+              <div className="inline-block bg-[#FFD400] text-[#16181D] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.06em]">
+                Byte: Stå{' '}
                 {legs[0].recommendedCarForTransfer === 'front'
                   ? 'FRAM'
                   : legs[0].recommendedCarForTransfer === 'back'
                     ? 'BAK'
                     : 'I MITTEN'}{' '}
-                av tåget!
+                i tåget
               </div>
+
               {legs[0].transferNote && (
-                <div className="text-[11px] text-[#78736B] mt-0.5">{legs[0].transferNote}</div>
+                <p className="text-[11px] text-[var(--ink-secondary)] leading-relaxed">
+                  {legs[0].transferNote}
+                </p>
               )}
             </div>
 
-            <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E7E2D9]">
-              <div className="font-semibold text-[#1F1D1A]">
-                Delsträcka 2: {legs[1].fromStation.name} ➔ {legs[1].toStation.name} (
-                {legs[1].line.name})
+            {/* Leg 2 */}
+            <div className="p-3.5 space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="signage-label text-[var(--ink-secondary)]">Delsträcka 2</span>
+                <span
+                  className={`font-mono-tabular text-[11px] font-bold px-1.5 py-0.5 ${
+                    getColorClasses(legs[1].line.color).bg
+                  } ${getColorClasses(legs[1].line.color).fgOnBg}`}
+                >
+                  {legs[1].line.id}
+                </span>
               </div>
-              <div className="text-[11px] text-[#78736B] mt-0.5">
-                Färdriktning: {legs[1].directionTitle}
+
+              <div className="font-bold text-[var(--ink-primary)]">
+                {legs[1].fromStation.name} → {legs[1].toStation.name}
+              </div>
+
+              <div className="text-[11px] font-semibold text-[var(--ink-secondary)]">
+                Färdriktning: <strong className="text-[var(--ink-primary)]">{legs[1].directionTitle}</strong>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Train Visualizer */}
+      {/* Architectural Train Visualizer */}
       {activeLeg && (
         <TrainVisualizer
           directionTitle={activeLeg.directionTitle}
@@ -150,99 +205,118 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
         />
       )}
 
-      {/* Exits list for Destination */}
-      <div className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-4 space-y-3">
-        <div className="flex items-center justify-between gap-2 pb-2 border-b border-[#F0ECE1]">
-          <div>
-            <h3 className="text-sm font-bold text-[#1F1D1A]">Uppgångar vid {to.name}</h3>
-            <p className="text-[11px] text-[#78736B]">
-              Välj din önskade uppgång nedan för att se var du ska stå
-            </p>
-          </div>
+      {/* Destination Exits Board */}
+      <section className="bg-[var(--bg-surface)] border border-[var(--grid-divider)]">
+        <div className="px-4 py-3 border-b border-[var(--grid-divider)] flex items-center justify-between gap-2">
+          <h3 className="font-display text-sm sm:text-base font-bold text-[var(--ink-primary)]">
+            Uppgångar vid {to.name}
+          </h3>
 
           <button
             type="button"
             onClick={() => setShowAllExits(!showAllExits)}
-            className="p-1 rounded-lg text-[#78736B] hover:text-[#1F1D1A] hover:bg-[#FAF8F5]"
+            aria-label={showAllExits ? 'Dölj uppgångar' : 'Visa uppgångar'}
+            className="metro-btn w-9 h-9 flex items-center justify-center border border-[var(--grid-divider)] bg-[var(--bg-canvas)] text-[var(--ink-primary)] hover:bg-[#008DD0] hover:text-[#FFFFFF] hover:border-[#008DD0]"
           >
-            {showAllExits ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            {showAllExits ? (
+              <MetroChevronUp className="w-4 h-4" />
+            ) : (
+              <MetroChevronDown className="w-4 h-4" />
+            )}
           </button>
         </div>
 
-        {/* Filter Pills for Car Position (Bak, Mitten, Fram) */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+        {/* Sharp Rectangular Filter Controls */}
+        <div className="grid grid-cols-4 border-b border-[var(--grid-divider)] bg-[var(--bg-canvas)] text-[11px] font-bold uppercase tracking-[0.06em]">
           <button
             type="button"
             onClick={() => setSelectedCar(null)}
-            className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${
+            className={`metro-btn py-2.5 px-2 border-r border-[var(--grid-divider)] flex items-center justify-center gap-1.5 ${
               selectedCar === null
-                ? 'bg-[#1F1D1A] text-white'
-                : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#EAE5DC]'
+                ? 'bg-[#16181D] text-[#FFFFFF] dark:bg-[#FFD400] dark:text-[#16181D]'
+                : 'text-[var(--ink-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--ink-primary)]'
             }`}
           >
-            Alla ({evaluatedExits.length})
+            <span>Alla</span>
+            <span className="font-mono-tabular">({evaluatedExits.length})</span>
           </button>
+
           <button
             type="button"
             onClick={() => setSelectedCar('back')}
-            className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 ${
+            className={`metro-btn py-2.5 px-2 border-r border-[var(--grid-divider)] flex items-center justify-center gap-1.5 ${
               selectedCar === 'back'
-                ? 'bg-[#D32F2F] text-white'
-                : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#FDF0F0]'
+                ? 'bg-[#E53935] text-[#FFFFFF]'
+                : 'text-[var(--ink-secondary)] hover:bg-[#E53935] hover:text-[#FFFFFF]'
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D32F2F]" />
-            Bak ({backExits.length})
+            <span
+              className={`w-2 h-2 shrink-0 ${selectedCar === 'back' ? 'bg-[#FFFFFF]' : 'bg-[#E53935]'}`}
+            />
+            <span>Bak</span>
+            <span className="font-mono-tabular hidden xs:inline">({backExits.length})</span>
           </button>
+
           <button
             type="button"
             onClick={() => setSelectedCar('middle')}
-            className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 ${
+            className={`metro-btn py-2.5 px-2 border-r border-[var(--grid-divider)] flex items-center justify-center gap-1.5 ${
               selectedCar === 'middle'
-                ? 'bg-[#006298] text-white'
-                : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#EAF3F9]'
+                ? 'bg-[#008DD0] text-[#FFFFFF]'
+                : 'text-[var(--ink-secondary)] hover:bg-[#008DD0] hover:text-[#FFFFFF]'
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#006298]" />
-            Mitten ({middleExits.length})
+            <span
+              className={`w-2 h-2 shrink-0 ${selectedCar === 'middle' ? 'bg-[#FFFFFF]' : 'bg-[#008DD0]'}`}
+            />
+            <span>Mitt</span>
+            <span className="font-mono-tabular hidden xs:inline">({middleExits.length})</span>
           </button>
+
           <button
             type="button"
             onClick={() => setSelectedCar('front')}
-            className={`px-2.5 py-1 rounded-lg font-medium transition-colors flex items-center gap-1 ${
+            className={`metro-btn py-2.5 px-2 flex items-center justify-center gap-1.5 ${
               selectedCar === 'front'
-                ? 'bg-[#138A36] text-white'
-                : 'bg-[#FAF8F5] text-[#6B665F] hover:bg-[#EAF5EE]'
+                ? 'bg-[#00A859] text-[#FFFFFF]'
+                : 'text-[var(--ink-secondary)] hover:bg-[#00A859] hover:text-[#FFFFFF]'
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#138A36]" />
-            Fram ({frontExits.length})
+            <span
+              className={`w-2 h-2 shrink-0 ${selectedCar === 'front' ? 'bg-[#FFFFFF]' : 'bg-[#00A859]'}`}
+            />
+            <span>Fram</span>
+            <span className="font-mono-tabular hidden xs:inline">({frontExits.length})</span>
           </button>
         </div>
 
         {showAllExits && (
-          <div className="space-y-2 pt-1">
+          <div className="p-3 sm:p-4">
             {displayedExits.length > 0 ? (
-              displayedExits.map(({ exit, carPosition, carPositionLabel }) => (
-                <ExitCard
-                  key={exit.id}
-                  exit={exit}
-                  carPosition={carPosition}
-                  carPositionLabel={carPositionLabel}
-                  isSelected={selectedExitId === exit.id}
-                  onSelect={() => {
-                    setSelectedExitId(exit.id);
-                    setSelectedCar(carPosition);
-                  }}
-                />
-              ))
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {displayedExits.map(({ exit, carPosition, carPositionLabel }) => (
+                  <ExitCard
+                    key={exit.id}
+                    exit={exit}
+                    carPosition={carPosition}
+                    carPositionLabel={carPositionLabel}
+                    isSelected={selectedExitId === exit.id}
+                    onSelect={() => {
+                      setSelectedExitId(exit.id);
+                      setSelectedCar(carPosition);
+                    }}
+                  />
+                ))}
+              </div>
             ) : (
-              <div className="text-center py-4 text-xs text-[#8E8980]">
-                Inga uppgångar finns i denna sektion av tåget.
+              <div className="py-6 px-4 text-center border border-[var(--grid-divider)] bg-[var(--bg-canvas)] space-y-2.5">
+                <p className="text-xs font-medium text-[var(--ink-secondary)]">
+                  Inga uppgångar finns i denna sektion av tåget.
+                </p>
                 <button
                   type="button"
                   onClick={() => setSelectedCar(null)}
-                  className="block mx-auto mt-1 text-[#006298] font-semibold hover:underline"
+                  className="metro-btn inline-flex items-center justify-center px-3.5 py-2 bg-[#008DD0] text-[#FFFFFF] hover:bg-[#FFD400] hover:text-[#16181D] text-xs font-bold uppercase tracking-[0.06em]"
                 >
                   Visa alla uppgångar
                 </button>
@@ -250,7 +324,7 @@ export const JourneyResultView: React.FC<JourneyResultViewProps> = ({
             )}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 };

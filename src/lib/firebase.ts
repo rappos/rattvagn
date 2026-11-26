@@ -5,14 +5,16 @@
 
 import { initializeApp } from 'firebase/app';
 import {
+  deleteUser,
   signOut as firebaseSignOut,
   GoogleAuthProvider,
   getAuth,
   onAuthStateChanged,
+  reauthenticateWithPopup,
   signInWithPopup,
   type User,
 } from 'firebase/auth';
-import { doc, getDoc, getDocFromServer, getFirestore, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, getDocFromServer, getFirestore, setDoc } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
@@ -87,4 +89,15 @@ export async function testConnection() {
 
 testConnection();
 
-export { doc, firebaseSignOut, getDoc, onAuthStateChanged, setDoc, signInWithPopup, type User };
+export {
+  deleteDoc,
+  deleteUser,
+  doc,
+  firebaseSignOut,
+  getDoc,
+  onAuthStateChanged,
+  reauthenticateWithPopup,
+  setDoc,
+  signInWithPopup,
+  type User,
+};

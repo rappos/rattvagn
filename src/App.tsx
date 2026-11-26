@@ -3,15 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ArrowUpDown, Star, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { AboutView } from './components/AboutView';
 import { Header, type TabType } from './components/Header';
 import { JourneyResultView } from './components/JourneyResultView';
+import { MetroBookmarkIcon, MetroCloseIcon, MetroSwapIcon } from './components/MetroIcons';
 import { StationAutocomplete } from './components/StationAutocomplete';
 import { StationBrowser } from './components/StationBrowser';
 import { getStation, STATIONS } from './data/stations';
 import { useFavorites } from './hooks/useFavorites';
+import { useTheme } from './hooks/useTheme';
 import type { Station } from './types/metro';
 import { calculateJourney } from './utils/metroLogic';
 
@@ -26,6 +27,7 @@ const POPULAR_STATIONS = [
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('resor');
+  const { theme, toggleTheme } = useTheme();
 
   // Favorites state
   const {
@@ -101,152 +103,180 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#1F1D1A] flex flex-col font-sans selection:bg-[#006298] selection:text-white">
-      {/* Header with authentic SL branding, tabs, auth, and PWA prompt */}
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--ink-primary)] flex flex-col">
+      {/* Stockholm Metro Platform Signboard Header */}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         user={user}
         authLoading={authLoading}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
-      {/* Main Content Area: Mobile First */}
-      <main className="flex-1 max-w-xl w-full mx-auto px-4 py-4 sm:py-6">
-        {/* TAB 1: RESOR */}
+      {/* Compact Architectural Main Grid */}
+      <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-3 sm:py-5">
+        {/* TAB 1: RESOR — 2-Column Transit Control & Departure Board on Desktop */}
         {activeTab === 'resor' && (
-          <div className="space-y-4">
-            {/* Search Box Card */}
-            <div className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-4 shadow-2xs space-y-3">
-              <div className="flex items-center justify-between pb-1">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#6B665F]">
-                  Sök sträcka
-                </span>
+          <div className="grid grid-cols-1 lg:grid-cols-[370px_1fr] gap-3 lg:gap-4 items-start">
+            {/* Left Rail: Route Search + Quick Hubs + Saved Routes */}
+            <aside className="space-y-3 lg:sticky lg:top-[76px]">
+              {/* Search Box Panel */}
+              <section className="bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-t-[5px] border-t-[#008DD0]">
+                <div className="px-3.5 py-2.5 border-b border-[var(--grid-divider)] bg-[var(--bg-canvas)] flex items-center justify-between gap-2">
+                  <span className="signage-label text-[var(--ink-primary)]">Sök sträcka</span>
 
-                <button
-                  type="button"
-                  onClick={handleSwapStations}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FAF8F5] hover:bg-[#EAE5DC] text-[#45423D] text-[11px] font-semibold transition-colors border border-[#E7E2D9]"
-                  title="Växla start- och slutstation"
-                >
-                  <ArrowUpDown className="w-3 h-3 text-[#006298]" />
-                  <span>Byt håll</span>
-                </button>
-              </div>
-
-              {/* Station inputs */}
-              <div className="space-y-2.5">
-                <StationAutocomplete
-                  label="1. Kliv på"
-                  placeholder="Avgångsstation (t.ex. Odenplan)..."
-                  selectedStation={fromStation}
-                  onSelectStation={setFromStation}
-                  otherStation={toStation}
-                  iconColor="text-[#138A36]"
-                  favoriteStationIds={favoriteStationIds}
-                />
-
-                <StationAutocomplete
-                  label="2. Kliv av"
-                  placeholder="Destination (t.ex. T-Centralen)..."
-                  selectedStation={toStation}
-                  onSelectStation={setToStation}
-                  otherStation={fromStation}
-                  iconColor="text-[#D32F2F]"
-                  favoriteStationIds={favoriteStationIds}
-                />
-              </div>
-
-              {/* Quick Hub Station Chips */}
-              <div className="pt-2 border-t border-[#F0ECE1] flex items-center gap-1.5 overflow-x-auto text-[11px] pb-0.5">
-                <span className="text-[#8E8980] shrink-0">Vanliga:</span>
-                {POPULAR_STATIONS.map((name) => {
-                  const st = getStation(name);
-                  if (!st) return null;
-                  const isDest = toStation?.id === st.id;
-                  const isOrig = fromStation?.id === st.id;
-                  return (
-                    <button
-                      key={st.id}
-                      type="button"
-                      onClick={() => {
-                        if (!fromStation || (fromStation && toStation)) {
-                          setToStation(st);
-                        } else {
-                          setToStation(st);
-                        }
-                      }}
-                      className={`px-2 py-0.5 rounded-md font-medium shrink-0 transition-colors ${
-                        isDest
-                          ? 'bg-[#006298] text-white'
-                          : isOrig
-                            ? 'bg-[#EAF5EE] text-[#138A36] border border-[#C8E7D3]'
-                            : 'bg-[#FAF8F5] text-[#524E48] hover:bg-[#EAE5DC]'
-                      }`}
-                    >
-                      {st.name.replace(/\s*\([^)]*\)/g, '')}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Favorite Routes Carousel / Chips (If saved) */}
-            {favoriteRoutes.length > 0 && (
-              <div className="bg-[#FFFFFF] border border-[#E7E2D9] rounded-2xl p-3.5 shadow-2xs space-y-2">
-                <div className="flex items-center gap-1 text-[11px] font-bold text-[#6B665F] uppercase tracking-wider">
-                  <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                  <span>Mina sparade sträckor ({favoriteRoutes.length})</span>
+                  <button
+                    type="button"
+                    onClick={handleSwapStations}
+                    className="metro-btn inline-flex items-center gap-1.5 h-8 px-2.5 bg-[var(--bg-surface)] border border-[var(--grid-divider)] text-[var(--ink-primary)] hover:bg-[#008DD0] hover:border-[#008DD0] hover:text-[#FFFFFF] text-[11px] font-bold uppercase tracking-[0.06em]"
+                    title="Växla start- och slutstation"
+                  >
+                    <MetroSwapIcon className="w-3.5 h-3.5" />
+                    <span>Byt håll</span>
+                  </button>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5">
-                  {favoriteRoutes.map((route) => {
-                    const isSelected =
-                      fromStation?.id === route.fromId && toStation?.id === route.toId;
-                    return (
-                      <div
-                        key={route.id}
-                        className={`inline-flex items-center gap-1.5 pl-2.5 pr-1 py-1 rounded-xl text-xs font-semibold border transition-all ${
-                          isSelected
-                            ? 'bg-[#EAF3F9] border-[#006298] text-[#006298]'
-                            : 'bg-[#FAF8F5] border-[#E7E2D9] text-[#1F1D1A] hover:border-[#1F1D1A]'
-                        }`}
-                      >
+                {/* Station Inputs */}
+                <div className="p-3.5 space-y-3">
+                  <StationAutocomplete
+                    label="1. Kliv på"
+                    placeholder="Avgångsstation (t.ex. Odenplan)..."
+                    selectedStation={fromStation}
+                    onSelectStation={setFromStation}
+                    otherStation={toStation}
+                    markerColor="bg-[#00A859]"
+                    favoriteStationIds={favoriteStationIds}
+                  />
+
+                  <StationAutocomplete
+                    label="2. Kliv av"
+                    placeholder="Destination (t.ex. T-Centralen)..."
+                    selectedStation={toStation}
+                    onSelectStation={setToStation}
+                    otherStation={fromStation}
+                    markerColor="bg-[#E53935]"
+                    favoriteStationIds={favoriteStationIds}
+                  />
+                </div>
+
+                {/* Quick Hub Station Grid */}
+                <div className="px-3.5 py-3 border-t border-[var(--grid-divider)] bg-[var(--bg-canvas)] space-y-2">
+                  <div className="signage-label text-[var(--ink-secondary)]">Knutpunkter</div>
+                  <div className="flex flex-wrap gap-1">
+                    {POPULAR_STATIONS.map((name) => {
+                      const st = getStation(name);
+                      if (!st) return null;
+                      const isDest = toStation?.id === st.id;
+                      const isOrig = fromStation?.id === st.id;
+                      return (
                         <button
+                          key={st.id}
                           type="button"
                           onClick={() => {
-                            const sFrom = getStation(route.fromId);
-                            const sTo = getStation(route.toId);
-                            if (sFrom) setFromStation(sFrom);
-                            if (sTo) setToStation(sTo);
+                            if (!fromStation || (fromStation && toStation)) {
+                              setToStation(st);
+                            } else {
+                              setToStation(st);
+                            }
                           }}
-                          className="hover:underline text-left truncate max-w-[170px]"
+                          className={`metro-btn px-2.5 py-1.5 text-[11px] font-bold border transition-colors ${
+                            isDest
+                              ? 'bg-[#008DD0] border-[#008DD0] text-[#FFFFFF]'
+                              : isOrig
+                                ? 'bg-[#00A859] border-[#00A859] text-[#FFFFFF]'
+                                : 'bg-[var(--bg-surface)] border-[var(--grid-divider)] text-[var(--ink-primary)] hover:bg-[#FFD400] hover:border-[#FFD400] hover:text-[#16181D]'
+                          }`}
                         >
-                          {route.fromName.replace(/\s*\([^)]*\)/g, '')} ➔{' '}
-                          {route.toName.replace(/\s*\([^)]*\)/g, '')}
+                          {st.name.replace(/\s*\([^)]*\)/g, '')}
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => removeFavoriteRoute(route.id)}
-                          className="p-1 text-[#8E8980] hover:text-[#D32F2F] rounded-full hover:bg-white"
-                          title="Ta bort sparad sträcka"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
+              </section>
 
-            {/* Results Presentation */}
-            {journeyPlan && (
-              <JourneyResultView
-                journeyPlan={journeyPlan}
-                isFavoriteRoute={isCurrentRouteFavorite}
-                onToggleFavoriteRoute={handleToggleCurrentRouteFavorite}
-              />
-            )}
+              {/* Saved Routes Panel */}
+              {favoriteRoutes.length > 0 && (
+                <section className="bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-l-[5px] border-l-[#FFD400]">
+                  <div className="px-3.5 py-2.5 border-b border-[var(--grid-divider)] bg-[var(--bg-canvas)] flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 signage-label text-[var(--ink-primary)]">
+                      <MetroBookmarkIcon filled className="w-3.5 h-3.5 text-[#F26D21]" />
+                      <span>Sparade sträckor</span>
+                    </div>
+                    <span className="font-mono-tabular text-[11px] font-bold bg-[#FFD400] text-[#16181D] px-1.5 py-0.5">
+                      {favoriteRoutes.length}
+                    </span>
+                  </div>
+
+                  <div className="divide-y divide-[var(--grid-divider)]">
+                    {favoriteRoutes.map((route) => {
+                      const isSelected =
+                        fromStation?.id === route.fromId && toStation?.id === route.toId;
+                      return (
+                        <div
+                          key={route.id}
+                          className={`flex items-stretch ${
+                            isSelected
+                              ? 'bg-[#008DD0] text-[#FFFFFF]'
+                              : 'bg-[var(--bg-surface)] text-[var(--ink-primary)]'
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const sFrom = getStation(route.fromId);
+                              const sTo = getStation(route.toId);
+                              if (sFrom) setFromStation(sFrom);
+                              if (sTo) setToStation(sTo);
+                            }}
+                            className={`metro-btn flex-1 px-3 py-2.5 text-left text-xs font-bold truncate ${
+                              isSelected
+                                ? 'text-[#FFFFFF]'
+                                : 'hover:bg-[var(--bg-canvas)] text-[var(--ink-primary)]'
+                            }`}
+                          >
+                            {route.fromName.replace(/\s*\([^)]*\)/g, '')} →{' '}
+                            {route.toName.replace(/\s*\([^)]*\)/g, '')}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => removeFavoriteRoute(route.id)}
+                            aria-label="Ta bort sparad sträcka"
+                            title="Ta bort sparad sträcka"
+                            className={`metro-btn w-10 flex items-center justify-center border-l shrink-0 ${
+                              isSelected
+                                ? 'border-[#FFFFFF]/25 text-[#FFFFFF] hover:bg-[#E53935]'
+                                : 'border-[var(--grid-divider)] text-[var(--ink-secondary)] hover:bg-[#E53935] hover:text-[#FFFFFF]'
+                            }`}
+                          >
+                            <MetroCloseIcon className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              )}
+            </aside>
+
+            {/* Right Main Panel: Live Journey Result & Train Diagram */}
+            <div className="min-w-0">
+              {journeyPlan ? (
+                <JourneyResultView
+                  journeyPlan={journeyPlan}
+                  isFavoriteRoute={isCurrentRouteFavorite}
+                  onToggleFavoriteRoute={handleToggleCurrentRouteFavorite}
+                />
+              ) : (
+                <div className="bg-[var(--bg-surface)] border border-[var(--grid-divider)] border-l-[5px] border-l-[#008DD0] p-6">
+                  <p className="font-display text-base font-bold text-[var(--ink-primary)]">
+                    Välj avgångsstation och destination för att se rätt vagn och uppgång.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -269,13 +299,6 @@ export default function App() {
         {/* TAB 3: OM */}
         {activeTab === 'om' && <AboutView />}
       </main>
-
-      {/* Simplified, Minimal Footer */}
-      <footer className="py-4 text-center text-[11px] text-[#8E8980] border-t border-[#E7E2D9] bg-[#FAF8F5]">
-        <div className="max-w-xl mx-auto px-4">
-          Rätt Vagn • Oberoende hjälpreda för Stockholms tunnelbana
-        </div>
-      </footer>
     </div>
   );
 }
